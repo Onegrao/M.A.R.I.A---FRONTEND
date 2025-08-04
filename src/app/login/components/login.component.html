@@ -1,0 +1,43 @@
+<div class="login-container">
+  <div class="header bg-gray-500 text-white p-4 flex justify-center">
+    <span class="icon">⚙️⚙️</span>
+  </div>
+  <div class="content bg-gray-200 p-6 flex flex-col items-center">
+    <h2 class="text-4xl font-bold mb-6">M.A.R.I.A</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-full max-w-xs">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm mb-2 flex items-center">
+          <span class="icon mr-2">👤</span> Usuário
+        </label>
+        <input
+          type="text"
+          formControlName="usuario"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          placeholder="Usuário"
+        />
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm mb-2 flex items-center">
+          <span class="icon mr-2">🔒</span> Senha
+        </label>
+        <input
+          type="password"
+          formControlName="senha"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          placeholder="Senha"
+        />
+      </div>
+      <p class="erro text-red-600 text-sm text-center mb-4" *ngIf="erroLogin">{{ erroLogin }}</p>
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+      >
+        Entrar
+      </button>
+    </form>
+    <p class="mt-4 text-center text-sm text-gray-600">
+      Sistema de Suporte à Manutenção - M.A.R.I.A
+    </p>
+  </div>
+</div>
