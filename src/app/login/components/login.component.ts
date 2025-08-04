@@ -1,48 +1,34 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule]
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  loginForm: FormGroup;
-  erroLogin: string = '';
+  usuario = '';
+  senha = '';
+  erroLogin = '';
+  showNotification = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
-    this.loginForm = this.fb.group({
-      usuario: ['', Validators.required],
-      senha: ['', Validators.required]
-    });
-  }
+  constructor(private router: Router) {}
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { usuario, senha } = this.loginForm.value;
-      this.http.post('/api/login', { username: usuario, password: senha }).subscribe({
-        next: (response: any) => {
-          console.log('Login bem-sucedido:', response);
-          // Redirecionar para o dashboard ou tratar o login com sucesso
-        },
-        error: (error: any) => {
-          if (error.status === 404) {
-            this.erroLogin = 'Usuário não cadastrado';
-          } else if (error.status === 401) {
-            this.erroLogin = 'Senha incorreta';
-          } else {
-            this.erroLogin = 'Erro ao tentar fazer login';
-          }
-        }
-      });
+  fazerLogin() {
+    if (this.usuario === 'admin@teste.com' && this.senha === '123456') {
+      this.erroLogin = '';
+      this.showNotification = false;
+      this.router.navigate(['/home']);
     } else {
-      this.erroLogin = 'Por favor, preencha todos os campos';
+      this.erroLogin = 'Usuário ou senha incorretos.';
+      this.showNotification = true;
+      setTimeout(() => {
+        this.showNotification = false;
+      }, 3000);
     }
   }
 }
