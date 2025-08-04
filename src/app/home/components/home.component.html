@@ -1,17 +1,17 @@
 <div class="sidebar">
-  <button class="icon-button">+</button>
+  <button class="icon-button" (click)="showPopup()">+</button>
   <div class="menu-icons">
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
+    <div class="icon" style="background-image: url('./assets/chat.png');"></div>
+    <div class="icon" style="background-image: url('./assets/doc.png');"></div>
+    <div class="icon" style="background-image: url('./assets/check.png');"></div>
+    <div class="icon" style="background-image: url('./assets/folder.png');"></div>
   </div>
 </div>
 
 <div class="topbar">
   <div class="top-icons">
-    <span class="icon">🔔</span>
-    <span class="icon">👤</span>
+    <span class="icon" style="background-image: url('./assets/bell.png');"></span>
+    <span class="icon" style="background-image: url('./assets/user.png');"></span>
   </div>
 </div>
 
@@ -20,4 +20,16 @@
   <div class="circle">
     <span>+</span>
   </div>
+</div>
+
+<div id="popup" class="popup" [style.display]="popupVisible ? 'block' : 'none'">
+  <h3>Cadastrar Máquina</h3>
+  <form>
+    <label for="machineName">Nome:</label><br>
+    <input type="text" id="machineName" name="machineName"><br><br>
+    <label for="machineType">Tipo:</label><br>
+    <input type="text" id="machineType" name="machineType"><br><br>
+    <button type="button" (click)="saveMachine()">Salvar</button>
+    <button type="button" (click)="hidePopup()">Cancelar</button>
+  </form>
 </div>
