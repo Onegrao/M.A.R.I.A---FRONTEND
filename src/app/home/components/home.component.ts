@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
   popupVisible = false;
+  sidebarOpen = false;
 
   showPopup() {
     this.popupVisible = true;
@@ -15,6 +18,10 @@ export class HomeComponent {
 
   hidePopup() {
     this.popupVisible = false;
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 
   saveMachine() {

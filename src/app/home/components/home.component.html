@@ -1,34 +1,35 @@
-<div class="sidebar">
-  <button class="icon-button" (click)="showPopup()">+</button>
-  <div class="menu-icons">
-    <div class="icon" style="background-image: url('./assets/chat.png');"></div>
-    <div class="icon" style="background-image: url('./assets/doc.png');"></div>
-    <div class="icon" style="background-image: url('./assets/check.png');"></div>
-    <div class="icon" style="background-image: url('./assets/folder.png');"></div>
+<div class="sidebar" [class.open]="sidebarOpen">
+  <button class="icon-button" (click)="toggleSidebar()">☰</button>
+  <div class="menu-icons" *ngIf="sidebarOpen">
+    <div class="icon chat-icon"></div>
+    <div class="icon doc-icon"></div>
+    <div class="icon check-icon"></div>
+    <div class="icon folder-icon"></div>
   </div>
 </div>
 
 <div class="topbar">
   <div class="top-icons">
-    <span class="icon" style="background-image: url('./assets/bell.png');"></span>
-    <span class="icon" style="background-image: url('./assets/user.png');"></span>
+    <span class="icon home-icon"></span>
+    <span class="icon bell-icon"></span>
+    <span class="icon user-icon"></span>
   </div>
 </div>
 
 <div class="content">
   <p>Ainda não há nada aqui</p>
-  <div class="circle">
+  <div class="circle" (click)="showPopup()">
     <span>+</span>
   </div>
 </div>
 
-<div id="popup" class="popup" [style.display]="popupVisible ? 'block' : 'none'">
+<div class="popup" [style.display]="popupVisible ? 'block' : 'none'">
   <h3>Cadastrar Máquina</h3>
   <form>
-    <label for="machineName">Nome:</label><br>
-    <input type="text" id="machineName" name="machineName"><br><br>
-    <label for="machineType">Tipo:</label><br>
-    <input type="text" id="machineType" name="machineType"><br><br>
+    <label for="machineName">Nome:</label><br />
+    <input type="text" id="machineName" name="machineName" /><br /><br />
+    <label for="machineType">Tipo:</label><br />
+    <input type="text" id="machineType" name="machineType" /><br /><br />
     <button type="button" (click)="saveMachine()">Salvar</button>
     <button type="button" (click)="hidePopup()">Cancelar</button>
   </form>
