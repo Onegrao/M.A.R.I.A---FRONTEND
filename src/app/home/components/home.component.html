@@ -1,36 +1,75 @@
+<!-- Barra Lateral (Sidebar) -->
 <div class="sidebar" [class.open]="sidebarOpen">
+  <!-- Botão para abrir/fechar -->
   <button class="icon-button" (click)="toggleSidebar()">☰</button>
-  <div class="menu-icons" *ngIf="sidebarOpen">
-    <div class="icon chat-icon"></div>
-    <div class="icon doc-icon"></div>
-    <div class="icon check-icon"></div>
-    <div class="icon folder-icon"></div>
+
+
+  <div class="menu-items" *ngIf="sidebarOpen">
+    <button class="menu-button">
+      <span class="icon chat-icon"></span>
+      <span class="menu-text">Manutenção</span>
+    </button>
+    <button class="menu-button">
+      <span class="icon doc-icon"></span>
+      <span class="menu-text">Emitir relatório</span>
+    </button>
+    <button class="menu-button">
+      <span class="icon check-icon"></span>
+      <span class="menu-text">Agendamento</span>
+    </button>
+    <button class="menu-button">
+      <span class="icon folder-icon"></span>
+      <span class="menu-text">Arquivos</span>
+    </button>
   </div>
 </div>
+
 
 <div class="topbar">
   <div class="top-icons">
-    <span class="icon home-icon"></span>
-    <span class="icon bell-icon"></span>
-    <span class="icon user-icon"></span>
+    <button class="icon-button-top">
+      <span class="icon home-icon"></span>
+    </button>
+    <button class="icon-button-top">
+      <span class="icon bell-icon"></span>
+    </button>
+
+    <button class="icon-button-top" (click)="openUserPopup()">
+      <span class="icon user-icon"></span>
+    </button>
   </div>
 </div>
+
 
 <div class="content">
   <p>Ainda não há nada aqui</p>
-  <div class="circle" (click)="showPopup()">
+
+  <a class="circle" routerLink="/cadastrar-maquina">
     <span>+</span>
-  </div>
+  </a>
 </div>
 
-<div class="popup" [style.display]="popupVisible ? 'block' : 'none'">
-  <h3>Cadastrar Máquina</h3>
-  <form>
-    <label for="machineName">Nome:</label><br />
-    <input type="text" id="machineName" name="machineName" /><br /><br />
-    <label for="machineType">Tipo:</label><br />
-    <input type="text" id="machineType" name="machineType" /><br /><br />
-    <button type="button" (click)="saveMachine()">Salvar</button>
-    <button type="button" (click)="hidePopup()">Cancelar</button>
-  </form>
+
+<div class="popup-backdrop" *ngIf="userPopupOpen" (click)="closeUserPopup()">
+
+  <div class="user-popup" (click)="$event.stopPropagation()">
+
+    <div class="popup-header">
+      <h3>Opções de Usuário</h3>
+      <button class="close-button" (click)="closeUserPopup()">&times;</button>
+    </div>
+
+    <div class="popup-content">
+      <button class="popup-option-button" (click)="editProfile()">
+        Editar Perfil
+      </button>
+      <button class="popup-option-button" (click)="openSettings()">
+        Configurações
+      </button>
+      <button class="popup-option-button logout" (click)="logout()">
+        Sair
+      </button>
+    </div>
+
+  </div>
 </div>

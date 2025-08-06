@@ -25,7 +25,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/app/home/components/assets"
+                "input": "src/assets"
               }
             ],
             "styles": [
@@ -86,7 +86,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/app/home/components/assets"
+                "input": "src//assets"
               }
             ],
             "styles": [

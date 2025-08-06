@@ -1,33 +1,55 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  popupVisible = false;
+
   sidebarOpen = false;
 
-  showPopup() {
-    this.popupVisible = true;
-  }
 
-  hidePopup() {
-    this.popupVisible = false;
-  }
+  userPopupOpen = false;
 
-  toggleSidebar() {
+
+  constructor() {}
+
+
+  toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
   }
 
-  saveMachine() {
-    const name = (document.getElementById('machineName') as HTMLInputElement).value;
-    const type = (document.getElementById('machineType') as HTMLInputElement).value;
-    console.log('Machine saved:', { name, type });
-    this.hidePopup();
+
+
+  openUserPopup(): void {
+    this.userPopupOpen = true;
+  }
+
+
+  closeUserPopup(): void {
+    this.userPopupOpen = false;
+  }
+
+
+  editProfile(): void {
+    console.log('Navegando para a página de editar perfil...');
+    this.closeUserPopup(); // Fecha o popup
+  }
+
+
+  openSettings(): void {
+    console.log('Abrindo a tela de configurações...');
+    this.closeUserPopup(); // Fecha o popup
+  }
+
+
+  logout(): void {
+    console.log('Usuário deslogado.');
+    this.closeUserPopup();
   }
 }
