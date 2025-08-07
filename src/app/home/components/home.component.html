@@ -3,7 +3,6 @@
   <!-- Botão para abrir/fechar -->
   <button class="icon-button" (click)="toggleSidebar()">☰</button>
 
-
   <div class="menu-items" *ngIf="sidebarOpen">
     <button class="menu-button">
       <span class="icon chat-icon"></span>
@@ -24,7 +23,7 @@
   </div>
 </div>
 
-
+<!-- Barra Superior (Topbar) -->
 <div class="topbar">
   <div class="top-icons">
     <button class="icon-button-top">
@@ -33,32 +32,40 @@
     <button class="icon-button-top">
       <span class="icon bell-icon"></span>
     </button>
-
     <button class="icon-button-top" (click)="openUserPopup()">
       <span class="icon user-icon"></span>
     </button>
   </div>
 </div>
 
-
 <div class="content">
-  <p>Ainda não há nada aqui</p>
+  <div class="maquinas-grid">
 
-  <a class="circle" routerLink="/cadastrar-maquina">
-    <span>+</span>
-  </a>
+    <div class="maquina-card" *ngFor="let maquina of maquinas">
+      <div class="card-header">
+        <h3>{{ maquina.nome }}</h3>
+      </div>
+      <div class="card-status">
+        <span class="status-dot" [ngClass]="'status-' + maquina.status"></span>
+        <p>{{ getStatusLabel(maquina.status) }}</p>
+      </div>
+      <div class="card-actions">
+        <a class="details-button" [routerLink]="['/maquina', maquina.id]">Detalhes</a>
+      </div>
+    </div>
+
+    <a class="add-card" routerLink="/cadastrar-maquina">
+      <span>+</span>
+    </a>
+  </div>
 </div>
 
-
 <div class="popup-backdrop" *ngIf="userPopupOpen" (click)="closeUserPopup()">
-
   <div class="user-popup" (click)="$event.stopPropagation()">
-
     <div class="popup-header">
       <h3>Opções de Usuário</h3>
       <button class="close-button" (click)="closeUserPopup()">&times;</button>
     </div>
-
     <div class="popup-content">
       <button class="popup-option-button" (click)="editProfile()">
         Editar Perfil
@@ -70,6 +77,5 @@
         Sair
       </button>
     </div>
-
   </div>
 </div>
