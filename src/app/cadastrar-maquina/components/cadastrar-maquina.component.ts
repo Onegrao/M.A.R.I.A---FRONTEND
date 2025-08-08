@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import {MaquinaService} from '../../services/maquina';
+import {MaquinaService} from '../../services/maquina.service';
 
 @Component({
   selector: 'app-cadastrar-maquina',

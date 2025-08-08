@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core'; // <-- Importe OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import {MaquinaService} from '../../services/maquina';
+import { Maquina, MaquinaService } from '../../services/maquina.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,7 @@ export class HomeComponent implements OnInit {
   sidebarOpen = false;
   userPopupOpen = false;
 
-  maquinas: any[] = [];
+  maquinas: Maquina[] = [];
 
   constructor(private maquinaService: MaquinaService) {}
 
@@ -26,18 +27,17 @@ export class HomeComponent implements OnInit {
   // MÉTODO PARA BUSCAR OS DADOS USANDO O SERVIÇO
   carregarMaquinas(): void {
     this.maquinaService.getMaquinas().subscribe({
-      next: (data) => {
+      next: (data: Maquina[]) => {
         this.maquinas = data; // Preenche a lista com os dados da API
         console.log('Máquinas carregadas:', this.maquinas);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Falha ao carregar máquinas:', err);
       }
     });
   }
 
-  // Função auxiliar para o template exibir o nome do status corretamente
-  getStatusLabel(statusKey: string): string {
+  getStatusLabel(statusKey: any): string {
     const labels: { [key: string]: string } = {
       'running': 'Running',
       'preventiva': 'Realizar preventiva',
