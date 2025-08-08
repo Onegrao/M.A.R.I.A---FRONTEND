@@ -18,12 +18,14 @@ import {MaquinaService} from '../../services/maquina';
 export class CadastrarMaquinaComponent {
 
   maquina: any = {
+    setor: '',
+    cod_serie: null,
+    funcao: '',
+    marca: '',
     nome: '',
-    modelo: '',
-    fabricante: '',
-    ano: null,
-    descricao: '',
-    status: 'running' // Status padrão ao cadastrar
+    apelido: '',
+    data_entrada: '',
+    status: null // Inicializado como nulo para o campo de seleção 'required'
   };
 
   constructor(
@@ -33,14 +35,15 @@ export class CadastrarMaquinaComponent {
 
   onSubmit(): void {
     this.maquinaService.cadastrarMaquina(this.maquina).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('Máquina cadastrada com sucesso!', response);
         alert('Máquina cadastrada com sucesso!');
         this.router.navigate(['/home']); // Navega para a home após o sucesso
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao cadastrar máquina:', err);
-        alert('Ocorreu um erro ao cadastrar a máquina. Verifique o console para mais detalhes.');
+        const erroMsg = err.error?.cod_serie?.[0] || 'Ocorreu um erro ao cadastrar a máquina.';
+        alert(erroMsg);
       }
     });
   }
