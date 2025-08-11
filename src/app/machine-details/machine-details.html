@@ -1,1 +1,58 @@
-<p>machine-details works!</p>
+<div class="details-container">
+
+  <div *ngIf="isLoading" class="loading-message">
+    <p>Carregando detalhes da máquina...</p>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="error-message">
+    <h2>Erro!</h2>
+    <p>{{ error }}</p>
+    <button (click)="goBack()" class="back-button">Voltar</button>
+  </div>
+
+  <div *ngIf="maquina as maquinaDetails" class="details-content">
+    <h1>{{ maquinaDetails.nome }}</h1>
+    <div class="details-card">
+      <h2>Informações Gerais</h2>
+
+      <div *ngIf="maquinaDetails.apelido" class="detail-item">
+        <strong>Apelido</strong>
+        <p>{{ maquinaDetails.apelido }}</p>
+      </div>
+
+      <div class="detail-item">
+        <strong>Status Atual</strong>
+        <p [ngClass]="'status-' + maquinaDetails.status">{{ getStatusLabel(maquinaDetails.status) }}</p>
+      </div>
+
+      <div class="detail-item">
+        <strong>Marca</strong>
+        <p>{{ maquinaDetails.marca }}</p>
+      </div>
+
+      <div class="detail-item">
+        <strong>Função</strong>
+        <p>{{ maquinaDetails.funcao }}</p>
+      </div>
+
+      <h2>Detalhes de Identificação</h2>
+
+      <div class="detail-item">
+        <strong>Código de Série</strong>
+        <p>{{ maquinaDetails.cod_serie }}</p>
+      </div>
+
+      <div class="detail-item">
+        <strong>Setor</strong>
+        <p>{{ maquinaDetails.setor }}</p>
+      </div>
+
+      <div class="detail-item">
+        <strong>Data de Entrada</strong>
+        <p>{{ maquinaDetails.data_entrada | date: 'dd/MM/yyyy' }}</p>
+      </div>
+    </div>
+
+    <button (click)="goBack()" class="back-button">Voltar</button>
+  </div>
+</div>

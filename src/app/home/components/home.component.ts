@@ -24,11 +24,10 @@ export class HomeComponent implements OnInit {
     this.carregarMaquinas();
   }
 
-  // MÉTODO PARA BUSCAR OS DADOS USANDO O SERVIÇO
   carregarMaquinas(): void {
     this.maquinaService.getMaquinas().subscribe({
       next: (data: Maquina[]) => {
-        this.maquinas = data; // Preenche a lista com os dados da API
+        this.maquinas = data;
         console.log('Máquinas carregadas:', this.maquinas);
       },
       error: (err: any) => {
@@ -39,9 +38,9 @@ export class HomeComponent implements OnInit {
 
   getStatusLabel(statusKey: any): string {
     const labels: { [key: string]: string } = {
-      'running': 'Running',
-      'preventiva': 'Realizar preventiva',
-      'perigo': 'Perigo'
+      'corretiva': 'Manutenção Corretiva',
+      'preventiva': 'Realizar Preventiva',
+      'desligada': 'Desligada'
     };
     return labels[statusKey] || 'Desconhecido';
   }

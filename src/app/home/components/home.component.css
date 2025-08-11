@@ -18,59 +18,60 @@
 
 .topbar {
   position: fixed; top: 0; left: 60px; right: 0; height: 60px;
-  background-color: #838383; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex; align-items: center; justify-content: flex-end;
   padding: 0 20px; z-index: 900; transition: left 0.3s ease;
+  border-bottom: 1px solid #e0e0e0;
 }
 .sidebar.open ~ .topbar { left: 200px; }
 .top-icons { display: flex; align-items: center; }
 .icon-button-top { background: none; border: none; cursor: pointer; padding: 5px; margin-left: 15px; border-radius: 50%; transition: background-color 0.2s; }
-.icon-button-top:hover { background-color: #7a7a7a; }
+.icon-button-top:hover { background-color: #f0f0f0; }
 .top-icons .icon { width: 28px; height: 28px; background-size: cover; display: block; }
 .home-icon { background-image: url('assets/home.png'); }
 .bell-icon { background-image: url('assets/bell.png'); }
 .user-icon { background-image: url('assets/user.png'); }
 
-/* --- GRID DE MÁQUINAS E CARDS --- */
 .content {
-  margin-top: 60px; /* Altura da topbar */
-  margin-left: 60px; /* Largura da sidebar */
+  margin-top: 60px;
+  margin-left: 60px;
   padding: 25px;
   transition: margin-left 0.3s ease;
+  background-color: #f0f2f5;
+  min-height: calc(100vh - 60px);
 }
 .sidebar.open ~ .content { margin-left: 200px; }
 
 .maquinas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 25px;
 }
 
 .maquina-card, .add-card {
-  background-color: #838383;
-  color: black; /* Cor do texto dentro do card */
+  background-color: #ffffff;
+  color: #333;
   border-radius: 12px;
   padding: 20px;
-  width: 100%;
-  max-width: 240px;
   height: 180px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .maquina-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
 }
 
 .card-header h3 {
   margin: 0;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .card-status {
@@ -80,36 +81,38 @@
 }
 
 .status-dot {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-/* Cores dos status */
-.status-running { background-color: #90EE90; } /* Verde claro */
-.status-preventiva { background-color: #FFD700; } /* Amarelo */
-.status-perigo { background-color: #FF6347; } /* Vermelho */
+.status-desligada { background-color: #838383; }
+.status-preventiva { background-color: #FFD700; }
+.status-corretiva { background-color: #FF6347; }
 
 .card-status p {
   margin: 0;
   font-size: 16px;
+  font-weight: 500;
 }
 
 .details-button {
-  background-color: #6d6d6d;
+  display: block;
+  background-color: #009cb2;
   color: white;
-  border: 1px solid black;
+  text-align: center;
+  text-decoration: none;
+  border: none;
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
-  width: 100%;
   font-size: 16px;
   transition: background-color 0.2s ease;
 }
 
 .details-button:hover {
-  background-color: #555;
+  background-color: #007a8a;
 }
 
 .add-card {
@@ -119,17 +122,16 @@
   font-weight: 200;
   cursor: pointer;
   text-decoration: none;
-  background-color: #ffffff;
-  border: 2px dashed #cccccc;
-  color: #aaaaaa;
+  background-color: #f8f9fa;
+  border: 2px dashed #ced4da;
+  color: #adb5bd;
 }
 
 .add-card:hover {
-  background-color: #f9f9f9;
-  color: #888888;
-  border-color: #bbbbbb;
+  background-color: #e9ecef;
+  color: #495057;
+  border-color: #adb5bd;
 }
-
 
 .popup-backdrop {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;

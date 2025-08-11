@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import {MaquinaService} from '../../services/maquina.service';
+import { Maquina, MaquinaService } from '../../services/maquina.service';
 
 @Component({
   selector: 'app-cadastrar-maquina',
@@ -17,15 +17,15 @@ import {MaquinaService} from '../../services/maquina.service';
 })
 export class CadastrarMaquinaComponent {
 
-  maquina: any = {
+  public maquina: Maquina = {
+    nome: '',
     setor: '',
-    cod_serie: null,
+    cod_serie: 0,
     funcao: '',
     marca: '',
-    nome: '',
     apelido: '',
     data_entrada: '',
-    status: null // Inicializado como nulo para o campo de seleção 'required'
+    status: 'desligada'
   };
 
   constructor(
@@ -34,13 +34,16 @@ export class CadastrarMaquinaComponent {
   ) { }
 
   onSubmit(): void {
+    // Garante que o cod_serie é enviado como número
+    this.maquina.cod_serie = Number(this.maquina.cod_serie);
+
     this.maquinaService.cadastrarMaquina(this.maquina).subscribe({
-      next: (response: any) => {
+      next: (response) => {
         console.log('Máquina cadastrada com sucesso!', response);
         alert('Máquina cadastrada com sucesso!');
-        this.router.navigate(['/home']); // Navega para a home após o sucesso
+        this.router.navigate(['/home']);
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Erro ao cadastrar máquina:', err);
         const erroMsg = err.error?.cod_serie?.[0] || 'Ocorreu um erro ao cadastrar a máquina.';
         alert(erroMsg);

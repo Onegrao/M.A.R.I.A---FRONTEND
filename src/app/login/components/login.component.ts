@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,19 +17,27 @@ export class LoginComponent {
   erroLogin = '';
   showNotification = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   fazerLogin() {
-    if (this.usuario === 'admin@teste.com' && this.senha === '123456') {
-      this.erroLogin = '';
-      this.showNotification = false;
-      this.router.navigate(['/home']);
-    } else {
-      this.erroLogin = 'Usuário ou senha incorretos.';
-      this.showNotification = true;
-      setTimeout(() => {
+
+    this.authService.login(this.usuario, this.senha).subscribe({
+      next: (response) => {
+        console.log('Login bem-sucedido, token recebido:', response);
+        this.erroLogin = '';
         this.showNotification = false;
-      }, 3000);
-    }
+        // Navega para a home APÓS o sucesso do login
+        this.router.navigate(['/home']);
+      },
+      // Callback de ERRO
+      error: (err) => {
+        console.error('Falha no login:', err);
+        this.erroLogin = 'Usuário ou senha incorretos. Por favor, tente novamente.';
+        this.showNotification = true;
+        setTimeout(() => {
+          this.showNotification = false;
+        }, 3000);
+      }
+    });
   }
 }
