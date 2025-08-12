@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Maquina, MaquinaService } from '../../services/maquina.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -18,7 +18,10 @@ export class HomeComponent implements OnInit {
 
   maquinas: Maquina[] = [];
 
-  constructor(private maquinaService: MaquinaService) {}
+  constructor(
+    private maquinaService: MaquinaService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.carregarMaquinas();
@@ -48,7 +51,19 @@ export class HomeComponent implements OnInit {
   toggleSidebar(): void { this.sidebarOpen = !this.sidebarOpen; }
   openUserPopup(): void { this.userPopupOpen = true; }
   closeUserPopup(): void { this.userPopupOpen = false; }
-  editProfile(): void { console.log('Navegando para a página de editar perfil...'); this.closeUserPopup(); }
-  openSettings(): void { console.log('Abrindo a tela de configurações...'); this.closeUserPopup(); }
-  logout(): void { console.log('Usuário deslogado.'); this.closeUserPopup(); }
+
+  editarPerfil(): void {
+    this.router.navigate(['/editar-perfil']);
+    this.closeUserPopup();
+  }
+
+  abrirConfiguracoes(): void {
+    this.router.navigate(['/configuracoes']);
+    this.closeUserPopup();
+  }
+
+  logout(): void {
+    this.router.navigate(['/login']);
+    this.closeUserPopup();
+  }
 }

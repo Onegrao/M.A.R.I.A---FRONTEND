@@ -60,6 +60,7 @@
   </div>
 </div>
 
+<!-- Popup de usuário com chamadas de função  -->
 <div class="popup-backdrop" *ngIf="userPopupOpen" (click)="closeUserPopup()">
   <div class="user-popup" (click)="$event.stopPropagation()">
     <div class="popup-header">
@@ -67,10 +68,10 @@
       <button class="close-button" (click)="closeUserPopup()">&times;</button>
     </div>
     <div class="popup-content">
-      <button class="popup-option-button" (click)="editProfile()">
+      <button class="popup-option-button" (click)="editarPerfil()">
         Editar Perfil
       </button>
-      <button class="popup-option-button" (click)="openSettings()">
+      <button class="popup-option-button" (click)="abrirConfiguracoes()">
         Configurações
       </button>
       <button class="popup-option-button logout" (click)="logout()">

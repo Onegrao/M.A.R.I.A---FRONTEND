@@ -27,9 +27,8 @@
 .sidebar.open ~ .topbar { left: 200px; }
 .top-icons { display: flex; align-items: center; }
 .icon-button-top { background: none; border: none; cursor: pointer; padding: 5px; margin-left: 15px; border-radius: 50%; transition: background-color 0.2s; }
-.icon-button-top:hover { background-color: #f0f0f0; }
+.icn-button-top:hover { background-color: #f0f0f0; }
 .top-icons .icon { width: 28px; height: 28px; background-size: cover; display: block; }
-.home-icon { background-image: url('assets/home.png'); }
 .bell-icon { background-image: url('assets/bell.png'); }
 .user-icon { background-image: url('assets/user.png'); }
 
