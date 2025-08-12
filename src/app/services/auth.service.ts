@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import {environment}  from '../../environments/environments';
 
 // Interface para a resposta do token do Django
 export interface AuthResponse {
@@ -14,7 +15,7 @@ export interface AuthResponse {
 })
 export class AuthService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/token/';
+  private apiUrl = `${environment.apiUrl}/api/token/`;
 
   constructor(private http: HttpClient, private router: Router) { }
 
