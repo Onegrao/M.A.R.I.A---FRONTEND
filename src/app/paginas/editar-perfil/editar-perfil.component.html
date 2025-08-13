@@ -1,0 +1,24 @@
+<div class="page-container">
+  <div class="content-card">
+    <h2>Editar Perfil</h2>
+    <p>Atualize suas informações pessoais aqui.</p>
+    <form (ngSubmit)="salvarPerfil()">
+      <div class="input-group">
+        <label for="nome">Nome Completo</label>
+        <input id="nome" type="text" name="nome" value="Usuário Padrão">
+      </div>
+      <div class="input-group">
+        <label for="email">Endereço de Email</label>
+        <input id="email" type="email" name="email" value="usuario@exemplo.com">
+      </div>
+      <div class="input-group">
+        <label for="telefone">Telefone</label>
+        <input id="telefone" type="tel" name="telefone" placeholder="(00) 00000-0000">
+      </div>
+      <div class="button-group">
+        <button type="button" class="secondary-button" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="primary-button">Salvar Alterações</button>
+      </div>
+    </form>
+  </div>
+</div>
