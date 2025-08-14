@@ -1,20 +1,61 @@
 <div class="page-container">
   <div class="content-card">
     <h2>Editar Perfil</h2>
-    <p>Atualize suas informações pessoais aqui.</p>
-    <form (ngSubmit)="salvarPerfil()">
+    <p>Atualize suas informações pessoais e de endereço aqui.</p>
+
+    <form *ngIf="perfil" (ngSubmit)="salvarPerfil()">
+
+      <h3>Dados Pessoais</h3>
       <div class="input-group">
         <label for="nome">Nome Completo</label>
-        <input id="nome" type="text" name="nome" value="Usuário Padrão">
+        <input id="nome" type="text" name="nome" [(ngModel)]="perfil.nome">
       </div>
       <div class="input-group">
         <label for="email">Endereço de Email</label>
-        <input id="email" type="email" name="email" value="usuario@exemplo.com">
+        <input id="email" type="email" name="email" [(ngModel)]="perfil.email">
       </div>
       <div class="input-group">
         <label for="telefone">Telefone</label>
-        <input id="telefone" type="tel" name="telefone" placeholder="(00) 00000-0000">
+        <input id="telefone" type="tel" name="telefone" placeholder="(00) 00000-0000" [(ngModel)]="perfil.telefone">
       </div>
+      <div class="input-group">
+        <label for="empresa">Empresa</label>
+        <input id="empresa" type="text" name="empresa" [(ngModel)]="perfil.empresa">
+      </div>
+      <div class="input-group">
+        <label for="cargo">Cargo (não pode ser alterado)</label>
+        <!--  Cargo  está desabilitado com disabled-->
+        <input id="cargo" type="text" name="cargo" [(ngModel)]="perfil.cargo" [disabled]="true">
+      </div>
+
+      <hr style="margin: 30px 0;">
+
+      <h3>Endereço</h3>
+      <div class="input-group">
+        <label for="cep">CEP</label>
+        <input id="cep" type="text" name="cep" [(ngModel)]="perfil.cep">
+      </div>
+      <div class="input-group">
+        <label for="logradouro">Logradouro (Rua, Avenida, etc.)</label>
+        <input id="logradouro" type="text" name="logradouro" [(ngModel)]="perfil.logradouro">
+      </div>
+      <div class="input-group">
+        <label for="numero">Número</label>
+        <input id="numero" type="text" name="numero" [(ngModel)]="perfil.numero">
+      </div>
+      <div class="input-group">
+        <label for="bairro">Bairro</label>
+        <input id="bairro" type="text" name="bairro" [(ngModel)]="perfil.bairro">
+      </div>
+      <div class="input-group">
+        <label for="cidade">Cidade</label>
+        <input id="cidade" type="text" name="cidade" [(ngModel)]="perfil.cidade">
+      </div>
+      <div class="input-group">
+        <label for="estado">Estado</label>
+        <input id="estado" type="text" name="estado" [(ngModel)]="perfil.estado">
+      </div>
+
       <div class="button-group">
         <button type="button" class="secondary-button" (click)="cancelar()">Cancelar</button>
         <button type="submit" class="primary-button">Salvar Alterações</button>

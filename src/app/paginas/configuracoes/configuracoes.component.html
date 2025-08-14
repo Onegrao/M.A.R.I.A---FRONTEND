@@ -8,7 +8,10 @@
         <p>Receber alertas de manutenção e relatórios no seu email.</p>
       </div>
       <div class="setting-control">
-        <button class="primary-button">Ativar</button>
+        <!-- Botão dinâmico -->
+        <button class="primary-button" (click)="toggleNotificacoes()">
+          {{ config.notificacoesPorEmail ? 'Desativar' : 'Ativar' }}
+        </button>
       </div>
     </div>
     <div class="setting-option">
@@ -17,7 +20,8 @@
         <p>Escolha entre o tema claro e escuro.</p>
       </div>
       <div class="setting-control">
-        <select class="select-box">
+        <!-- Select agora salva ao ser alterado -->
+        <select class="select-box" [(ngModel)]="config.tema" (change)="salvarConfiguracoes()">
           <option>Tema Claro</option>
           <option>Tema Escuro</option>
         </select>

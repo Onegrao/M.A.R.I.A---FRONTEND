@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import {environment}  from '../../environments/environments';
+import { environment } from '../../environments/environments';
 
 // Interface para a resposta do token do Django
 export interface AuthResponse {
@@ -19,7 +19,6 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-
   login(usuario: string, senha: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.apiUrl, { username: usuario, password: senha })
       .pipe(
@@ -35,9 +34,13 @@ export class AuthService {
   }
 
   logout() {
-
     localStorage.removeItem('access_token');
     // Navega o usuário de volta para a página de login
     this.router.navigate(['/login']);
   }
+
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
 }
+
