@@ -20,9 +20,12 @@
       <span class="icon folder-icon"></span>
       <span class="menu-text">Arquivos</span>
     </button>
+    <button *ngIf="isAdmin" class="menu-button" routerLink="/admin/usuarios">  <!-- Botão so aparece  se for admin -->
+      <span class="icon usuarios-icon"></span>
+      <span class="menu-text">Usuários</span>
+    </button>
   </div>
 </div>
-
 <!-- Barra Superior (Topbar) -->
 <div class="topbar">
   <div class="top-icons">

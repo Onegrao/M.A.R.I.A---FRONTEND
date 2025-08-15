@@ -15,6 +15,7 @@
 .doc-icon { background-image: url('assets/doc.png'); }
 .check-icon { background-image: url('assets/check.png'); }
 .folder-icon { background-image: url('assets/folder.png'); }
+.usuarios-icon { background-image: url('assets/usuarios.png'); }
 
 .topbar {
   position: fixed; top: 0; left: 60px; right: 0; height: 60px;

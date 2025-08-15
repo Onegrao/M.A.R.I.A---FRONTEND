@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Maquina, MaquinaService } from '../../services/maquina.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -15,16 +15,18 @@ export class HomeComponent implements OnInit {
 
   sidebarOpen = false;
   userPopupOpen = false;
-
   maquinas: Maquina[] = [];
+  isAdmin = false; // controla exibição de botões de admin
 
   constructor(
     private maquinaService: MaquinaService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.carregarMaquinas();
+    this.isAdmin = this.authService.isUserAdmin();
   }
 
   carregarMaquinas(): void {

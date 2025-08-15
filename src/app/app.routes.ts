@@ -5,6 +5,7 @@ import { CadastrarMaquinaComponent } from './cadastrar-maquina/components/cadast
 import { MachineDetails } from './machine-details/machine-details';
 import {EditarPerfilComponent} from './paginas/editar-perfil/editar-perfil.component';
 import { ConfiguracoesComponent } from './paginas/configuracoes/configuracoes.component';
+import {GerenciarUsuariosComponent} from './paginas/gerenciar-usuarios/gerenciar-usuarios.component';
 
 
 export const routes: Routes = [
@@ -15,4 +16,5 @@ export const routes: Routes = [
   { path: 'cadastrar-maquina', component: CadastrarMaquinaComponent },
   { path: 'editar-perfil', component: EditarPerfilComponent },
   { path: 'configuracoes', component: ConfiguracoesComponent },
+  { path:  'admin/usuarios',component: GerenciarUsuariosComponent},
 ];

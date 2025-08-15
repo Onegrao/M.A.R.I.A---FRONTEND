@@ -1,0 +1,62 @@
+<div class="page-container">
+  <div class="content-card">
+    <h2>Gerenciar Usuários</h2>
+    <p>Adicione, visualize e remova usuários do sistema.</p>
+
+    <!-- Botão para mostrar o formulário de cadastro -->
+    <div class="button-group" style="justify-content: flex-start; margin-bottom: 20px;" *ngIf="!mostrarFormulario">
+      <button class="primary-button" (click)="iniciarCadastro()">Adicionar Novo Usuário</button>
+    </div>
+
+    <div *ngIf="mostrarFormulario" class="form-cadastro">
+      <h3>Novo Usuário</h3>
+      <form (ngSubmit)="cadastrarUsuario()">
+        <div class="input-group">
+          <label for="username">Nome de Usuário (para login)</label>
+          <input id="username" type="text" name="username" [(ngModel)]="novoUsuario.username" required>
+        </div>
+        <div class="input-group">
+          <label for="first_name">Nome Completo</label>
+          <input id="first_name" type="text" name="first_name" [(ngModel)]="novoUsuario.first_name">
+        </div>
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" [(ngModel)]="novoUsuario.email" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Senha</label>
+          <input id="password" type="password" name="password" [(ngModel)]="novoUsuario.password" required>
+        </div>
+        <div class="button-group">
+          <button type="button" class="secondary-button" (click)="cancelarCadastro()">Cancelar</button>
+          <button type="submit" class="primary-button">Salvar Usuário</button>
+        </div>
+      </form>
+      <hr style="margin: 30px 0;">
+    </div>
+
+    <h3>Usuários Cadastrados</h3>
+    <table class="user-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome de Usuário</th>
+        <th>Nome Completo</th>
+        <th>Email</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.id }}</td>
+        <td>{{ usuario.username }}</td>
+        <td>{{ usuario.first_name }}</td>
+        <td>{{ usuario.email }}</td>
+        <td>
+          <button class="delete-button" (click)="excluirUsuario(usuario.id)">Excluir</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
