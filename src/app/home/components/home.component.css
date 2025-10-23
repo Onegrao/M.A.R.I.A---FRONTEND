@@ -1,34 +1,69 @@
+/* --- Estilos Gerais da Página (Sidebar, Topbar, Content) --- */
+
 .sidebar {
   position: fixed; top: 0; left: 0; width: 60px; height: 100vh;
-  background-color: #009cb2; transition: width 0.3s ease;
+  /* Cor primária da sua marca, pode não mudar com o tema */
+  background-color: #009cb2;
+  transition: width 0.3s ease;
   z-index: 1000; overflow-x: hidden;
 }
 .sidebar.open { width: 200px; }
 .icon-button { background: none; color: white; border: none; font-size: 24px; margin: 10px; cursor: pointer; }
 .menu-items { display: flex; flex-direction: column; margin-top: 20px; }
-.menu-button { display: flex; align-items: center; background: none; border: none; color: white; padding: 12px 15px; width: 100%; text-align: left; cursor: pointer; transition: background-color 0.2s; white-space: nowrap; }
-.menu-button:hover { background-color: #008a9e; }
-.menu-button .icon { width: 30px; height: 30px; background-size: cover; flex-shrink: 0; margin-right: 15px; }
-.menu-text { font-size: 16px; }
+/* Alterado para 'a' para corresponder ao HTML atualizado */
+.menu-button, a.menu-button {
+  display: flex; align-items: center; background: none; border: none;
+  color: white; padding: 12px 15px; width: 100%; text-align: left;
+  cursor: pointer; transition: background-color 0.2s; white-space: nowrap;
+  text-decoration: none; /* Garante que links <a> não tenham sublinhado */
+  box-sizing: border-box;
+}
+.menu-button:hover, a.menu-button:hover { background-color: #008a9e; }
+.menu-button .icon {
+  width: 24px; /* Ajustado tamanho do ícone */
+  height: 24px;
+  background-size: contain; /* Usar contain para não cortar */
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0; margin-right: 15px;
+  display: inline-block; /* Importante para alinhar */
+}
+.menu-text { font-size: 1rem; font-weight: 500;} /* Ajustado tamanho e peso */
 
+/* Ícones do Sidebar */
 .chat-icon { background-image: url('assets/chat.png'); }
 .doc-icon { background-image: url('assets/doc.png'); }
 .check-icon { background-image: url('assets/check.png'); }
 .folder-icon { background-image: url('assets/folder.png'); }
 
+.user-admin-icon { background-image: url('assets/admin-user.png'); }
+
+
 .topbar {
   position: fixed; top: 0; left: 60px; right: 0; height: 60px;
-  background-color: #ffffff;
+  /* USA VARIÁVEIS DE TEMA */
+  background-color: var(--cor-fundo-secundario, #ffffff); /* Fallback branco */
+  border-bottom: 1px solid var(--cor-borda, #e9ecef); /* Fallback cinza */
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   display: flex; align-items: center; justify-content: flex-end;
   padding: 0 20px; z-index: 900; transition: left 0.3s ease;
-  border-bottom: 1px solid #e0e0e0;
 }
 .sidebar.open ~ .topbar { left: 200px; }
-.top-icons { display: flex; align-items: center; }
-.icon-button-top { background: none; border: none; cursor: pointer; padding: 5px; margin-left: 15px; border-radius: 50%; transition: background-color 0.2s; }
-.icn-button-top:hover { background-color: #f0f0f0; }
-.top-icons .icon { width: 28px; height: 28px; background-size: cover; display: block; }
+.top-icons { display: flex; align-items: center; gap: 15px;} /* Adicionado gap */
+.icon-button-top { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: background-color 0.2s; display: flex; align-items: center; justify-content: center;}
+.icon-button-top:hover { background-color: rgba(0,0,0,0.05); }
+.top-icons .icon {
+  width: 26px; /* Ajustado tamanho */
+  height: 26px;
+  background-size: contain; /* Usar contain */
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+  opacity: 0.7; /* Levemente transparente */
+  transition: opacity 0.2s;
+}
+.icon-button-top:hover .icon { opacity: 1; }
+/* Ícones do Topbar */
 .bell-icon { background-image: url('assets/bell.png'); }
 .user-icon { background-image: url('assets/user.png'); }
 
@@ -37,124 +72,251 @@
   margin-left: 60px;
   padding: 25px;
   transition: margin-left 0.3s ease;
-  background-color: #f0f2f5;
+  /* USA VARIÁVEIS DE TEMA */
+  background-color: var(--cor-fundo-primario, #f8f9fa); /* Fallback cinza claro */
   min-height: calc(100vh - 60px);
 }
 .sidebar.open ~ .content { margin-left: 200px; }
 
+/* --- Grid e Cards de Máquinas --- */
+
 .maquinas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajustado minmax */
   gap: 25px;
 }
 
 .maquina-card, .add-card {
-  background-color: #ffffff;
-  color: #333;
-  border-radius: 12px;
+  /* USA VARIÁVEIS DE TEMA */
+  background-color: var(--cor-fundo-secundario, #ffffff);
+  color: var(--cor-texto-primario, #212529);
+  border-radius: 10px; /* Levemente menos arredondado */
   padding: 20px;
-  height: 180px;
+  min-height: 180px; /* Usar min-height */
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07); /* Sombra ajustada */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--cor-borda, #e9ecef); /* Borda suave */
 }
 
 .maquina-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+  transform: translateY(-4px); /* Elevação menor */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  font-size: 1.15rem; /* Tamanho ajustado */
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Ícone delete no topo */
+  margin-bottom: 10px; /* Espaço abaixo do header */
 }
 
 .card-header h3 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
+  /* Limita o texto a uma linha e adiciona '...' */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px; /* Espaço para o botão delete não sobrepor */
 }
 
 .card-status {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px; /* Gap menor */
+  margin-bottom: 15px; /* Espaço abaixo do status */
 }
 
 .status-dot {
-  width: 15px;
-  height: 15px;
+  width: 12px; /* Menor */
+  height: 12px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.status-desligada { background-color: #838383; }
-.status-preventiva { background-color: #FFD700; }
-.status-corretiva { background-color: #FF6347; }
+/* Cores de status */
+.status-desligada { background-color: #6c757d; } /* Cinza */
+.status-preventiva { background-color: #ffc107; } /* Amarelo */
+.status-corretiva { background-color: #dc3545; } /* Vermelho */
 
 .card-status p {
   margin: 0;
-  font-size: 16px;
+  font-size: 0.9rem; /* Menor */
   font-weight: 500;
+  color: var(--cor-texto-secundario, #6c757d); /* Cor secundária */
 }
 
-.details-button {
-  display: block;
-  background-color: #009cb2;
+.card-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: auto; /* Empurra ações para baixo */
+}
+
+.details-button, .manual-btn {
+  flex: 1;
+  display: block; /* Manteve block */
   color: white;
   text-align: center;
   text-decoration: none;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 9px 10px; /* Padding ajustado */
+  border-radius: 6px; /* Menos arredondado */
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s ease;
+  font-size: 0.9rem; /* Menor */
+  font-weight: 500; /* Menos negrito */
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.details-button:active, .manual-btn:active {
+  transform: scale(0.98); /* Efeito de clique */
 }
 
+.details-button {
+  background-color: #009cb2; /* Sua cor primária */
+}
 .details-button:hover {
   background-color: #007a8a;
+}
+
+.manual-btn {
+  background-color: #6c757d; /* Cinza secundário */
+}
+.manual-btn:hover {
+  background-color: #5a6268;
 }
 
 .add-card {
   justify-content: center;
   align-items: center;
-  font-size: 60px;
-  font-weight: 200;
+  font-size: 4rem; /* Reduzido */
+  font-weight: 300; /* Mais leve */
   cursor: pointer;
   text-decoration: none;
-  background-color: #f8f9fa;
-  border: 2px dashed #ced4da;
-  color: #adb5bd;
+  background-color: var(--cor-fundo-primario, #f8f9fa);
+  border: 2px dashed var(--cor-borda, #dee2e6); /* Borda mais suave */
+  color: var(--cor-texto-secundario, #adb5bd); /* Cor mais suave */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  min-height: 180px; /* Mantém altura mínima */
 }
 
 .add-card:hover {
-  background-color: #e9ecef;
-  color: #495057;
-  border-color: #adb5bd;
+  background-color: var(--cor-fundo-hover, #e9ecef); /* Fundo hover suave */
+  border-color: var(--cor-texto-secundario, #adb5bd); /* Borda hover */
 }
+.add-card span {
+  margin-top: -5px; /* Ajuste vertical do '+' */
+}
+
+
+/* --- Pop-up do Usuário --- */
 
 .popup-backdrop {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6); z-index: 1050;
-  display: flex; justify-content: center; align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo mais sutil */
+  z-index: 1050;
+  display: flex;
+  /* Posicionamento canto superior direito */
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-top: 55px; /* Abaixo da topbar */
+  padding-right: 20px;
   animation: fadeIn 0.2s ease;
 }
 .user-popup {
-  background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.25);
-  width: 90%; max-width: 320px; z-index: 1051;
-  overflow: hidden; animation: slideIn 0.3s ease-out;
+  background: var(--cor-fundo-secundario, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  width: 280px;
+  z-index: 1051;
+  overflow: hidden;
+  animation: slideInDropdown 0.3s ease-out;
+  border: 1px solid var(--cor-borda, #dee2e6); /* Borda sutil */
+}
+@keyframes slideInDropdown {
+  from { transform: translateY(-15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 .popup-header {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 15px 20px; border-bottom: 1px solid #eee;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--cor-borda, #eee);
 }
-.popup-header h3 { margin: 0; font-size: 18px; color: #333; }
-.close-button { background: none; border: none; font-size: 28px; line-height: 1; color: #888; cursor: pointer; padding: 0; }
-.close-button:hover { color: #000; }
-.popup-content { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-.popup-option-button { width: 100%; padding: 12px; font-size: 16px; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; text-align: center; transition: background-color 0.2s, transform 0.2s; }
-.popup-option-button:hover { background-color: #e0e0e0; transform: translateY(-1px); }
-.popup-option-button.logout { background-color: #ffdddd; border-color: #ffb8b8; color: #d8000c; }
-.popup-option-button.logout:hover { background-color: #ffc2c2; }
+.popup-header h3 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--cor-texto-primario, #343a40); }
+.popup-header .close-button {
+  background: none; border: none; font-size: 1.5rem; line-height: 1;
+  color: var(--cor-texto-secundario, #adb5bd); cursor: pointer; padding: 0;
+  transition: color 0.2s;
+}
+.popup-header .close-button:hover { color: var(--cor-texto-primario, #495057); }
+
+.popup-content { padding: 10px; display: flex; flex-direction: column; gap: 5px; } /* Menos padding e gap */
+.popup-option-button {
+  width: 100%; padding: 10px 15px; font-size: 0.9rem; font-weight: 500;
+  background-color: transparent; /* Fundo transparente por padrão */
+  border: none; /* Sem borda */
+  border-radius: 6px; cursor: pointer; text-align: left;
+  color: var(--cor-texto-primario, #495057);
+  transition: background-color 0.2s, color 0.2s;
+}
+.popup-option-button:hover {
+  background-color: var(--cor-fundo-hover, #f8f9fa); /* Fundo hover sutil */
+  color: #007bff; /* Azul no hover */
+}
+.popup-option-button.logout { color: #dc3545; /* Vermelho */ }
+.popup-option-button.logout:hover {
+  background-color: #fef2f2; /* Fundo vermelho claro */
+  color: #991b1b; /* Vermelho escuro */
+}
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+/* @keyframes slideIn não é mais usado pelo popup */
+
+/* --- Botão de Exclusão Card --- */
+
+.delete-button {
+  background: none; border: none; cursor: pointer; font-size: 1.1rem; /* Menor */
+  color: #adb5bd; /* Cinza mais claro */
+  padding: 0; line-height: 1; transition: color 0.2s ease;
+}
+.delete-button:hover { color: #dc3545; /* Vermelho */ }
+
+/* --- Modal do Chat --- */
+.chat-modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Mais escuro */
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1060; /* Acima do backdrop do popup */
+  animation: fadeIn 0.2s ease;
+}
+.chat-modal-content {
+  position: relative; /* Para o botão fechar */
+  /* O tamanho será definido pelo componente <app-chat> interno */
+}
+.close-btn { /* Botão fechar do chat */
+  position: absolute; top: -15px; right: -15px; /* Ajuste posição */
+  background: white; border: 1px solid #dee2e6; /* Borda suave */
+  border-radius: 50%; width: 32px; height: 32px; /* Tamanho ajustado */
+  cursor: pointer; font-weight: bold; color: #495057; /* Cor do X */
+  z-index: 1061; display: flex; justify-content: center; align-items: center;
+  font-size: 1.1rem; /* Tamanho do X */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Sombra */
+  transition: background-color 0.2s, color 0.2s;
+}
+.close-btn:hover {
+  background-color: #f8f9fa;
+  color: #000;
+}
+
+:root {
+  --cor-fundo-primario: #f8f9fa;
+  --cor-fundo-secundario: #ffffff;
+  --cor-texto-primario: #212529;
+  --cor-texto-secundario: #6c757d;
+  --cor-borda: #dee2e6;
+  --cor-fundo-hover: #e9ecef;
+}

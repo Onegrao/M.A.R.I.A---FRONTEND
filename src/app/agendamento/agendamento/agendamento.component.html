@@ -1,0 +1,218 @@
+<div class="sidebar" [class.open]="sidebarOpen">
+  <button class="icon-button" (click)="toggleSidebar()">☰</button>
+  @if (sidebarOpen) {
+    <div class="menu-items">
+      <button class="menu-button" [routerLink]="'/home'">
+        <span class="icon home-icon"></span>
+        <span class="menu-text">Home</span>
+      </button>
+      <button class="menu-button" [routerLink]="'/agendamento'">
+        <span class="icon check-icon"></span>
+        <span class="menu-text">Agendamento</span>
+      </button>
+      <button class="menu-button" [routerLink]="'/relatorios'">
+        <span class="icon doc-icon"></span>
+        <span class="menu-text">Relatórios</span>
+      </button>
+    </div>
+  }
+</div>
+
+<div class="topbar">
+  <div class="top-icons">
+    <button class="icon-button-top" [routerLink]="'/home'">
+      <span class="icon home-icon"></span>
+    </button>
+    <button class="icon-button-top">
+      <span class="icon user-icon"></span>
+    </button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="kanban-header">
+    <h2>Agendamentos de Manutenção</h2>
+    <button class="btn btn-primary" (click)="abrirModalNovoAgendamento()">Novo Agendamento</button>
+  </div>
+
+  <div class="filter-section">
+    <label for="statusFilter">Filtrar Pendentes por Status:</label>
+    <select id="statusFilter" [(ngModel)]="statusFilter">
+      <option value="">Todos</option>
+      <option value="agendado">Agendado</option>
+      <option value="em_andamento">Em Andamento</option>
+    </select>
+  </div>
+
+  <div class="agendamento-list">
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Máquina</th>
+        <th>Responsável</th>
+        <th>Data</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (agendamento of agendamentosFiltrados; track agendamento.id) {
+          <tr>
+            <td>{{ agendamento.id }}</td>
+            <td>{{ agendamento.maquina_nome }}</td>
+            <td>{{ agendamento.responsavel_nome }}</td>
+            <td>{{ agendamento.data_hora_agendada | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td><span class="status-text" [ngClass]="agendamento.status">{{ agendamento.status_display }}</span></td>
+            <td>
+              <button class="btn btn-sm btn-info" (click)="abrirModalDetalhes(agendamento)">Detalhes</button>
+              <button class="btn btn-sm btn-secondary" (click)="abrirModalHistorico(agendamento)">Histórico</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state">Nenhum agendamento pendente encontrado.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (novoAgendamentoModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content modal-form">
+      <div class="modal-header">
+        <h3>Novo Agendamento</h3>
+        <button class="close-button" (click)="fecharModalNovoAgendamento()">×</button>
+      </div>
+      <form (ngSubmit)="salvarAgendamento()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Máquina</label>
+            <select [(ngModel)]="novoAgendamento.maquina" name="maquina" required>
+              @for (m of maquinasDisponiveis; track m.id) {
+                <option [value]="m.id">{{ m.nome }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Responsável</label>
+            <select [(ngModel)]="novoAgendamento.responsavel" name="responsavel" required>
+              @for (u of responsaveisDisponiveis; track u.id) {
+                <option [value]="u.id">{{ u.username }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Data e Hora</label>
+            <input type="datetime-local" [(ngModel)]="novoAgendamento.data_hora_agendada" name="data_hora_agendada"
+                   required/>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Manutenção</label>
+            <select [(ngModel)]="novoAgendamento.tipo_manutencao" name="tipo_manutencao">
+              <option value="Preventiva">Preventiva</option>
+              <option value="Corretiva">Corretiva</option>
+              <option value="Preditiva">Preditiva</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="novoAgendamento.descricao_agendamento" name="descricao_agendamento"></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="fecharModalNovoAgendamento()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (detalhesModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content modal-details">
+      <div class="modal-header">
+        <h3>Detalhes do Agendamento</h3>
+        <button class="close-button" (click)="fecharModalDetalhes()">×</button>
+      </div>
+      @if (agendamentoSelecionado) {
+        <div>
+          <p><strong>ID:</strong> {{ agendamentoSelecionado.id }}</p>
+          <p><strong>Máquina:</strong> {{ agendamentoSelecionado.maquina_nome }}</p>
+          <p><strong>Responsável:</strong> {{ agendamentoSelecionado.responsavel_nome }}</p>
+          <p><strong>Data:</strong> {{ agendamentoSelecionado.data_hora_agendada | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Status:</strong> {{ agendamentoSelecionado.status_display }}</p>
+          <p><strong>Tipo de Manutenção:</strong> {{ agendamentoSelecionado.tipo_manutencao }}</p>
+          <p><strong>Descrição:</strong> {{ agendamentoSelecionado.descricao_agendamento }}</p>
+
+          @if (agendamentoSelecionado.status === 'em_andamento') {
+            <div class="form-group full-width" style="margin-top: 1rem;">
+              <label>Observações da Execução (Parecer Técnico)</label>
+              <textarea [(ngModel)]="observacoesParaConclusao" name="observacoes_execucao" rows="4"></textarea>
+            </div>
+          }
+
+          <div class="modal-actions">
+            <button class="btn btn-secondary" (click)="fecharModalDetalhes()">Fechar</button>
+
+            @if (agendamentoSelecionado.status === 'agendado') {
+              <button class="btn btn-info" (click)="iniciarManutencao()">
+                Iniciar
+              </button>
+            }
+
+            @if (agendamentoSelecionado.status === 'em_andamento') {
+              <button class="btn btn-success" (click)="concluirManutencao()">
+                Concluir
+              </button>
+            }
+
+            @if (agendamentoSelecionado.status === 'agendado' || agendamentoSelecionado.status === 'em_andamento') {
+              <button class="btn btn-danger" (click)="cancelarManutencao()">
+                Cancelar
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (historicoModalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Histórico da {{ nomeMaquinaHistorico }}</h3>
+        <button class="close-button" (click)="fecharModalHistorico()">×</button>
+      </div>
+
+      @if (isLoadingHistorico) {
+        <div style="text-align: center; padding: 2rem;">
+          <p>Carregando histórico...</p>
+        </div>
+      }
+
+      @if (!isLoadingHistorico) {
+        <div>
+          @for (a of historicoMaquinaSelecionada; track a.id) {
+            <div>
+              <p><strong>ID:</strong> {{ a.id }}</p>
+              <p><strong>Status:</strong> {{ a.status_display }}</p>
+              <p><strong>Data da Execução:</strong> {{ a.data_hora_execucao | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p><strong>Observações:</strong> {{ a.observacoes_execucao }}</p>
+              <hr/>
+            </div>
+          } @empty {
+            <div>
+              <p>Nenhum histórico encontrado para esta máquina.</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

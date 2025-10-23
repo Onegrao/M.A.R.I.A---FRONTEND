@@ -46,12 +46,22 @@
       <div class="form-group">
         <label for="status">Status da Máquina</label>
         <select id="status" name="status" [(ngModel)]="maquina.status" required class="form-control">
-          <option [ngValue]="null" disabled>Selecione um status...</option>
           <option value="preventiva">Realizar Preventiva</option>
           <option value="corretiva">Manutenção Corretiva</option>
-          <option value="desligada">Desligada</option>
+          <option value="desligada" selected>Desligada</option>
         </select>
       </div>
+
+      <div class="form-group">
+        <label for="manual">Manual da Máquina (PDF, Opcional)</label>
+        <input
+          type="file"
+          id="manual"
+          name="manual"
+          (change)="onFileSelected($event)"
+          accept=".pdf">
+      </div>
+
 
       <div class="form-actions">
         <button type="button" class="cancel-button" routerLink="/home">Cancelar</button>

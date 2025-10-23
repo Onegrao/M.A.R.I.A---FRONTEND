@@ -3,3 +3,45 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* src/styles.css */
+
+/* --- Sistema de Temas com Variáveis CSS --- */
+
+/* 1. Cores padrão (Tema Claro) */
+:root {
+  --cor-fundo-primario: #f0f2f5; /* Fundo principal da página (cinza claro) */
+  --cor-fundo-secundario: #ffffff; /* Fundo de cards, modais, etc. (branco) */
+  --cor-texto-primario: #333333; /* Texto principal (preto/cinza escuro) */
+  --cor-texto-secundario: #666666; /* Texto de parágrafos, etc. (cinza) */
+  --cor-borda: #eeeeee; /* Cor de bordas e divisórias */
+}
+
+/* 2. Cores do Tema Escuro (ativado pela classe no body) */
+body.theme-escuro {
+  --cor-fundo-primario: #121212; /* Fundo principal da página (PRETO) */
+  --cor-fundo-secundario: #1e1e1e; /* Fundo de cards (cinza bem escuro) */
+  --cor-texto-primario: #e0e0e0; /* Texto principal (branco/cinza claro) */
+  --cor-texto-secundario: #b3b3b3; /* Texto de parágrafos (cinza) */
+  --cor-borda: #333333; /* Cor de bordas (cinza escuro) */
+}
+
+/* 3. Aplicar as variáveis aos elementos principais */
+body {
+  background-color: var(--cor-fundo-primario);
+  color: var(--cor-texto-primario);
+  transition: background-color 0.3s, color 0.3s; /* Transição suave */
+}
+
+
+.content-card, .modal-content {
+  background-color: var(--cor-fundo-secundario);
+  color: var(--cor-texto-primario);
+}
+
+h2, h3 {
+  color: var(--cor-texto-primario);
+}
+
+p {
+  color: var(--cor-texto-secundario);
+}

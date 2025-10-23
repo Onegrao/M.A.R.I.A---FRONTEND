@@ -1,0 +1,194 @@
+<div class="sidebar" [class.open]="sidebarOpen">
+  <button class="icon-button" (click)="toggleSidebar()">☰</button>
+  @if (sidebarOpen) {
+    <div class="menu-items">
+      <a class="menu-button" [routerLink]="'/home'">
+        <span class="icon home-icon"></span><span class="menu-text">Home</span>
+      </a>
+      <a class="menu-button" [routerLink]="'/agendamento'">
+        <span class="icon check-icon"></span><span class="menu-text">Agendamento</span>
+      </a>
+      @if (authService.isAdmin) {
+        <a class="menu-button" [routerLink]="'/gerenciar-usuarios'">
+          <span class="icon user-admin-icon"></span><span class="menu-text">Usuários</span>
+        </a>
+      }
+      <a class="menu-button" [routerLink]="'/relatorios'"> <span class="icon doc-icon"></span><span class="menu-text">Relatórios</span>
+      </a>
+      <a class="menu-button" [routerLink]="'/arquivos'"> <span class="icon folder-icon"></span><span class="menu-text">Arquivos</span>
+      </a>
+    </div>
+  }
+</div>
+
+<div class="topbar">
+  <div class="top-icons">
+    <button class="icon-button-top" [routerLink]="'/home'">
+      <span class="icon home-icon"></span>
+    </button>
+    <button class="icon-button-top"> <span class="icon bell-icon"></span>
+    </button>
+    <button class="icon-button-top" (click)="openUserPopup()"> <span class="icon user-icon"></span>
+    </button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="kanban-header"> <h2>Gerenciar Usuários</h2>
+    <button class="btn btn-primary" (click)="abrirModalNovo()">Adicionar Novo Usuário</button>
+  </div>
+  <div class="agendamento-list"> <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Usuário (Login)</th>
+      <th>Nome Completo</th>
+      <th>Email</th>
+      <th>Permissão</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (user of usuarios; track user.id) {
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            @if (user.is_staff) {
+              <span class="status-tag admin">Admin</span>
+            } @else {
+              <span class="status-tag padrao">Padrão</span>
+            }
+          </td>
+          <td>
+            <button class="btn btn-sm btn-info" (click)="abrirModalEditar(user)">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="excluirUsuario(user.id)">Excluir</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="empty-state">Nenhum usuário cadastrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  </div>
+</div>
+
+@if (modalOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content modal-form modal-large">
+      <div class="modal-header">
+        <h3>{{ isEditMode ? 'Editar Usuário' : 'Criar Novo Usuário' }}</h3>
+        <button class="close-button" (click)="fecharModal()">×</button>
+      </div>
+
+      <form (ngSubmit)="salvarUsuario()">
+        <div class="form-grid-layout">
+
+          <div>
+            <h3 class="form-section-title">Dados de Acesso</h3>
+            <div class="form-group">
+              <label for="username">Usuário (Login)</label>
+              <input type="text" id="username" [(ngModel)]="usuarioSelecionado.username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" [(ngModel)]="usuarioSelecionado.email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Senha {{ isEditMode ? '(Deixe em branco para não alterar)' : '' }}</label>
+              <input type="password" id="password" [(ngModel)]="usuarioSelecionado.password" name="password" [required]="!isEditMode">
+            </div>
+
+            <h3 class="form-section-title">Dados Pessoais</h3>
+            <div class="form-group">
+              <label for="first_name">Nome</label>
+              <input type="text" id="first_name" [(ngModel)]="usuarioSelecionado.first_name" name="first_name">
+            </div>
+            <div class="form-group">
+              <label for="last_name">Sobrenome</label>
+              <input type="text" id="last_name" [(ngModel)]="usuarioSelecionado.last_name" name="last_name">
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" [(ngModel)]="usuarioSelecionado.telefone" name="telefone">
+            </div>
+            <div class="form-group">
+              <label for="cargo">Cargo</label>
+              <input type="text" id="cargo" [(ngModel)]="usuarioSelecionado.cargo" name="cargo">
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa</label>
+              <input type="text" id="empresa" [(ngModel)]="usuarioSelecionado.empresa" name="empresa">
+            </div>
+          </div>
+
+          <div>
+            <h3 class="form-section-title">Endereço</h3>
+            <div class="form-group">
+              <label for="cep">CEP</label>
+              <input type="text" id="cep" [(ngModel)]="usuarioSelecionado.cep" name="cep">
+            </div>
+            <div class="form-group">
+              <label for="logradouro">Logradouro (Rua, Av.)</label>
+              <input type="text" id="logradouro" [(ngModel)]="usuarioSelecionado.logradouro" name="logradouro">
+            </div>
+            <div class="form-group">
+              <label for="numero">Número</label>
+              <input type="text" id="numero" [(ngModel)]="usuarioSelecionado.numero" name="numero">
+            </div>
+            <div class="form-group">
+              <label for="bairro">Bairro</label>
+              <input type="text" id="bairro" [(ngModel)]="usuarioSelecionado.bairro" name="bairro">
+            </div>
+            <div class="form-group">
+              <label for="cidade">Cidade</label>
+              <input type="text" id="cidade" [(ngModel)]="usuarioSelecionado.cidade" name="cidade">
+            </div>
+            <div class="form-group">
+              <label for="estado">Estado</label>
+              <input type="text" id="estado" [(ngModel)]="usuarioSelecionado.estado" name="estado">
+            </div>
+
+            <h3 class="form-section-title">Permissões</h3>
+            <div class="form-group toggle-group">
+              <input type="checkbox" id="is_staff_toggle" [(ngModel)]="usuarioSelecionado.is_staff" name="is_staff">
+              <label for="is_staff_toggle">Este usuário é Administrador?</label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar Usuário</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (userPopupOpen) {
+  <div class="popup-backdrop" (click)="closeUserPopup()">
+    <div class="user-popup" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <h3>Opções de Utilizador</h3>
+        <button class="close-button" (click)="closeUserPopup()">&times;</button>
+      </div>
+      <div class="popup-content">
+        <button class="popup-option-button" (click)="editarPerfil()">
+          Editar Perfil
+        </button>
+        <button class="popup-option-button" (click)="abrirConfiguracoes()">
+          Configurações
+        </button>
+        <button class="popup-option-button logout" (click)="logout()">
+          Sair
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,496 @@
+/* --- ESTILOS GLOBAIS (COPIADOS PARA GARANTIR FUNCIONAMENTO) --- */
+/* Certifique-se que estes não conflitem com styles.css global, se houver */
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px; /* Largura fechado */
+  height: 100vh;
+  background-color: #009cb2; /* Sua cor principal */
+  transition: width 0.3s ease;
+  z-index: 1000;
+  overflow-x: hidden;
+  display: flex; /* Para alinhar o botão de toggle */
+  flex-direction: column;
+}
+.sidebar.open {
+  width: 220px; /* Largura aberto (ajuste se necessário) */
+}
+.sidebar .icon-button { /* Botão toggle */
+  background: none;
+  color: white;
+  border: none;
+  font-size: 24px;
+  margin: 10px;
+  cursor: pointer;
+  align-self: flex-start; /* Alinha no início */
+}
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px; /* Espaço após botão toggle */
+  width: 100%;
+}
+.menu-button { /* Usado para <a> ou <button> */
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: white;
+  padding: 12px 20px; /* Padding ajustado */
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap; /* Impede quebra de linha */
+  text-decoration: none; /* Remove sublinhado de links <a> */
+  box-sizing: border-box; /* Garante padding correto */
+}
+.menu-button:hover {
+  background-color: #008a9e; /* Cor hover */
+}
+.menu-button .icon {
+  width: 24px; /* Tamanho do ícone */
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+  margin-right: 15px;
+  display: inline-block;
+}
+.menu-button .menu-text {
+  font-size: 1rem; /* Tamanho do texto */
+  font-weight: 500;
+}
+
+.home-icon {background-image: url('assets/home.png');}
+.chat-icon { background-image: url('assets/chat.png'); }
+.doc-icon { background-image: url('assets/doc.png'); }
+.check-icon { background-image: url('assets/check.png'); }
+.folder-icon { background-image: url('assets/folder.png'); }
+
+.user-admin-icon { background-image: url('assets/admin-user.png'); }
+/* Topbar */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 60px; /* Largura do sidebar fechado */
+  right: 0;
+  height: 60px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Ícones à direita */
+  padding: 0 25px; /* Padding lateral */
+  z-index: 900;
+  transition: left 0.3s ease;
+  border-bottom: 1px solid #e9ecef; /* Linha inferior suave */
+}
+.sidebar.open ~ .topbar {
+  left: 220px; /* Largura do sidebar aberto */
+}
+.top-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaço entre ícones */
+}
+.icon-button-top {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex; /* Para centralizar o ícone span */
+  align-items: center;
+  justify-content: center;
+}
+.icon-button-top .icon {
+  width: 26px; /* Tamanho dos ícones do topbar */
+  height: 26px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+  opacity: 0.7; /* Ícones levemente transparentes */
+  transition: opacity 0.2s;
+}
+.icon-button-top:hover .icon {
+  opacity: 1; /* Opacidade total no hover */
+}
+.bell-icon { background-image: url('assets/bell.png'); }
+.user-icon { background-image: url('assets/user.png'); }
+
+/* Content Area */
+.content {
+  margin-top: 60px; /* Altura do topbar */
+  margin-left: 60px; /* Largura do sidebar fechado */
+  padding: 30px; /* Padding geral */
+  transition: margin-left 0.3s ease;
+  background-color: #f8f9fa; /* Fundo cinza bem claro */
+  min-height: calc(100vh - 60px);
+}
+.sidebar.open ~ .content {
+  margin-left: 220px; /* Largura do sidebar aberto */
+}
+
+/* --- ESTILOS ESPECÍFICOS DA PÁGINA "GERENCIAR USUÁRIOS" --- */
+
+/* Cabeçalho da página */
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 1.5rem;
+}
+.kanban-header h2 {
+  font-size: 1.8rem; /* Título maior */
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+}
+.kanban-header .btn-primary { /* Botão "Adicionar" */
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Tabela de Usuários */
+.agendamento-list { /* Container da tabela */
+  background-color: #fff;
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07); /* Sombra mais pronunciada */
+  overflow: hidden; /* Para border-radius funcionar */
+  margin-bottom: 2rem;
+}
+.agendamento-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.agendamento-list th,
+.agendamento-list td {
+  padding: 1rem 1.2rem; /* Mais padding */
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+}
+.agendamento-list thead tr { /* Garante que o header tenha a borda inferior */
+  border-bottom: 2px solid #dee2e6; /* Borda mais grossa no header */
+}
+.agendamento-list th {
+  background-color: #fff; /* Fundo branco também */
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.agendamento-list td {
+  color: #495057;
+  font-size: 0.95rem;
+}
+/* Remove borda da última linha */
+.agendamento-list tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Botões de Ação na Tabela */
+.agendamento-list .btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+  margin-right: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent; /* Adiciona borda transparente para manter tamanho */
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+.agendamento-list .btn-info { /* Editar */
+  background-color: #e0f2fe; /* Azul claro */
+  color: #0c54a8; /* Azul escuro */
+  border-color: #bae6fd;
+}
+.agendamento-list .btn-info:hover {
+  background-color: #bae6fd;
+}
+.agendamento-list .btn-danger { /* Excluir */
+  background-color: #fef2f2; /* Vermelho claro */
+  color: #991b1b; /* Vermelho escuro */
+  border-color: #fecaca;
+}
+.agendamento-list .btn-danger:hover {
+  background-color: #fecaca;
+}
+
+/* Tags de Permissão */
+.status-tag {
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.2;
+}
+.status-tag.admin { background-color: #198754; }
+.status-tag.padrao { background-color: #6c757d; }
+
+.empty-state {
+  text-align: center;
+  padding: 2.5rem; /* Mais padding */
+  color: #6c757d;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+/* --- ESTILOS DO MODAL --- */
+
+/* Overlay (fundo escuro) */
+.modal-overlay {
+  position: fixed; /* Fica fixo na tela */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Largura total */
+  height: 100vh; /* Altura total */
+  background-color: rgba(0, 0, 0, 0.65); /* Fundo semi-transparente */
+  z-index: 1050; /* Fica acima de quase tudo */
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  animation: fadeIn 0.3s ease; /* Animação suave */
+}
+
+/* Conteúdo do Modal */
+.modal-content {
+  background: white;
+  border-radius: 10px; /* Bordas arredondadas */
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2); /* Sombra mais forte */
+  width: 90%; /* Responsivo */
+  animation: slideIn 0.4s ease-out; /* Animação de entrada */
+  position: relative; /* Para posicionar o botão fechar */
+}
+
+/* Variação de tamanho para o modal de usuário */
+.modal-large {
+  max-width: 900px; /* Largura máxima */
+  max-height: 90vh; /* Altura máxima */
+  overflow-y: auto; /* Rolagem interna se necessário */
+  padding: 0; /* Remove padding padrão para controlar com header/body/footer */
+}
+
+/* Cabeçalho do Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem; /* Padding interno */
+  border-bottom: 1px solid #e9ecef; /* Linha separadora */
+}
+.modal-header h3 {
+  font-size: 1.3rem; /* Título maior */
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+}
+.close-button { /* Botão 'X' */
+  background: none;
+  border: none;
+  font-size: 2rem; /* Tamanho maior */
+  line-height: 1;
+  color: #adb5bd; /* Cinza claro */
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.close-button:hover { color: #495057; } /* Escurece no hover */
+
+/* Corpo do formulário dentro do modal */
+.modal-form {
+  padding: 1.8rem 2rem; /* Padding do corpo */
+}
+
+/* Grid Layout do Formulário */
+.form-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.8rem 2.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Títulos das Seções no Formulário */
+.form-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #007c8a;
+  border-bottom: 2px solid #009cb2;
+  padding-bottom: 6px;
+  margin-top: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+.form-grid-layout > div:first-child .form-section-title:first-child { margin-top: 0; }
+
+/* Campos do Formulário */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.4rem;
+}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"] {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  color: #495057;
+  background-color: #fff;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-group input:focus {
+  border-color: #009cb2;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 156, 178, 0.2);
+}
+
+/* Checkbox de Permissão */
+.toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+.toggle-group input[type="checkbox"] {
+  height: 1.1rem;
+  width: 1.1rem;
+  cursor: pointer;
+  accent-color: #009cb2;
+}
+.toggle-group label {
+  margin-bottom: 0;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+/* Ações no Rodapé do Modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end; /* Botões à direita */
+  gap: 0.8rem;
+  margin-top: 2rem; /* Espaço acima */
+  padding: 1.5rem 2rem; /* Padding interno */
+  border-top: 1px solid #e9ecef; /* Linha separadora */
+  background-color: #f8f9fa; /* Fundo levemente cinza */
+  border-bottom-left-radius: 10px; /* Arredonda cantos inferiores */
+  border-bottom-right-radius: 10px;
+}
+/* Reutiliza seus botões .btn */
+.modal-actions .btn {
+  padding: 0.65rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.modal-actions .btn-secondary { /* Botão Cancelar */
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+}
+.modal-actions .btn-secondary:hover {
+  background-color: #dee2e6;
+}
+
+/* --- ESTILOS DO POP-UP DE USUÁRIO (COPIADOS PARA GARANTIR) --- */
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Mais sutil */
+  z-index: 1100; /* Acima do modal normal */
+  display: flex;
+  /* Posiciona no canto superior direito */
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-top: 55px; /* Abaixo da topbar */
+  padding-right: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.user-popup {
+  background: white;
+  border-radius: 8px; /* Menos arredondado */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15); /* Sombra mais suave */
+  width: 280px; /* Largura fixa */
+  z-index: 1101;
+  overflow: hidden;
+  animation: slideInDropdown 0.3s ease-out; /* Animação diferente */
+}
+@keyframes slideInDropdown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px; /* Padding ajustado */
+  border-bottom: 1px solid #eee;
+}
+.popup-header h3 {
+  margin: 0;
+  font-size: 1rem; /* Menor */
+  font-weight: 600;
+  color: #343a40;
+}
+.popup-header .close-button { /* Reutiliza o estilo do modal */
+  font-size: 1.5rem;
+}
+
+.popup-content {
+  padding: 15px; /* Padding ajustado */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espaço menor */
+}
+.popup-option-button {
+  width: 100%;
+  padding: 10px 15px; /* Padding ajustado */
+  font-size: 0.9rem; /* Menor */
+  font-weight: 500;
+  background-color: #fff; /* Fundo branco */
+  border: 1px solid transparent; /* Sem borda visível */
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left; /* Alinha texto à esquerda */
+  color: #495057;
+  transition: background-color 0.2s, color 0.2s;
+}
+.popup-option-button:hover {
+  background-color: #f8f9fa; /* Fundo cinza claro no hover */
+  color: #007bff; /* Cor azul no hover */
+}
+.popup-option-button.logout {
+  color: #dc3545; /* Cor vermelha para Sair */
+}
+.popup-option-button.logout:hover {
+  background-color: #fef2f2; /* Fundo vermelho claro no hover */
+  color: #991b1b;
+}
+
+/* Animações Globais */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

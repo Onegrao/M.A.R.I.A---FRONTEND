@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 
 export interface ConfiguracoesUsuario {
   notificacoesPorEmail: boolean;
-  tema: 'Tema Claro' | 'Tema Escuro';
 }
 
 @Injectable({
@@ -20,7 +19,6 @@ export class ConfiguracoesService {
   }
 
   salvarConfiguracoes(config: ConfiguracoesUsuario): Observable<any> {
-    // PUT vai substituir o objeto de configurações inteiro
     return this.http.put(this.apiUrl, config);
   }
 }

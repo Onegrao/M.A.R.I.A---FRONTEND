@@ -1,0 +1,19 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <h3>{{ nomeMaquina }}</h3>
+  </div>
+  <div class="chat-messages">
+    <div *ngFor="let msg of mensagens" class="message" [ngClass]="{'user-message': msg.sender === 'user', 'bot-message': msg.sender === 'bot'}">
+      <p>{{ msg.text }}</p>
+    </div>
+    <div *ngIf="carregandoResposta" class="message bot-message">
+      <p class="typing-indicator"><span>.</span><span>.</span><span>.</span></p>
+    </div>
+  </div>
+  <div class="chat-input">
+    <form (ngSubmit)="enviarMensagem()">
+      <input type="text" [(ngModel)]="novaMensagem" name="novaMensagem" placeholder="Digite sua pergunta..." [disabled]="carregandoResposta" autocomplete="off">
+      <button type="submit" [disabled]="carregandoResposta">Enviar</button>
+    </form>
+  </div>
+</div>

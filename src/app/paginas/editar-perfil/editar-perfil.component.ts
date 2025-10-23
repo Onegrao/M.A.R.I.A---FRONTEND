@@ -1,34 +1,36 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { PerfilService, PerfilUsuario } from '../../services/perfil.service';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { UsuarioService, PerfilUsuario } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-editar-perfil',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './editar-perfil.component.html',
   styleUrls: ['./editar-perfil.component.css']
 })
 export class EditarPerfilComponent implements OnInit {
-  // Objeto para guardar os dados do formulário
   perfil: Partial<PerfilUsuario> = {};
 
   constructor(
     private router: Router,
-    private perfilService: PerfilService
+    // 2. Injetar o UsuarioService
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
-    // Carrega os dados do usuário quando a página inicia
-    this.perfilService.getPerfil().subscribe(data => {
+    // 3. Chamar o getPerfil do UsuarioService
+    this.usuarioService.getPerfil().subscribe(data => {
       this.perfil = data;
     });
   }
 
   salvarPerfil(): void {
-    this.perfilService.salvarPerfil(this.perfil).subscribe(() => {
+    // 4. Chamar o updatePerfil do UsuarioService
+    //    (O método para salvar chama-se 'updatePerfil' no service)
+    this.usuarioService.updatePerfil(this.perfil as PerfilUsuario).subscribe(() => {
       alert('Perfil salvo com sucesso!');
       this.router.navigate(['/home']);
     });

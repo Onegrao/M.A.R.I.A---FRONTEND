@@ -1,0 +1,542 @@
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 100vh;
+  background-color: #009cb2;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  overflow-x: hidden;
+}
+
+.sidebar.open {
+  width: 200px;
+}
+
+.icon-button {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 24px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.menu-button:hover {
+  background-color: #008a9e;
+}
+
+.menu-button .icon {
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.menu-text {
+  font-size: 16px;
+}
+
+.chat-icon { background-image: url('assets/chat.png'); }
+.doc-icon { background-image: url('assets/doc.png'); }
+.check-icon { background-image: url('assets/check.png'); }
+.folder-icon { background-image: url('assets/folder.png'); }
+
+/* Topbar */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 60px;
+  right: 0;
+  height: 60px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px;
+  z-index: 900;
+  transition: left 0.3s ease;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar.open ~ .topbar {
+  left: 200px;
+}
+
+.top-icons {
+  display: flex;
+  align-items: center;
+}
+
+.icon-button-top {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 15px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.icon-button-top:hover {
+  background-color: #f0f0f0;
+}
+
+.top-icons .icon {
+  width: 28px;
+  height: 28px;
+  background-size: cover;
+  display: block;
+}
+
+.bell-icon { background-image: url('assets/bell.png'); }
+.user-icon { background-image: url('../../../assets/admin-user.png'); }
+
+/* Content */
+.content {
+  margin-top: 60px;
+  margin-left: 60px;
+  padding: 25px;
+  transition: margin-left 0.3s ease;
+  background-color: #f0f2f5;
+  min-height: calc(100vh - 60px);
+}
+
+.sidebar.open ~ .content {
+  margin-left: 200px;
+}
+
+/* Kanban Header */
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #adb5bd;
+  margin-bottom: 1rem;
+}
+
+.kanban-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+/* Botões */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border: none;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: #00ccbe;
+  color: white;
+}
+.btn-primary:hover { background-color: #09a6a3; }
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+.btn-success:hover { background-color: #218838; }
+
+.btn-danger {
+  background-color: #d8000c;
+  color: white;
+}
+.btn-danger:hover { background-color: #c82333; }
+
+.btn-secondary {
+  background-color: #fcf9d8;
+  color: #333;
+  border: 1px solid #adb5bd;
+}
+.btn-secondary:hover { background-color: #f0e8c0; }
+
+/* Filtro */
+.filter-section {
+  margin-bottom: 1rem;
+}
+.filter-section label {
+  margin-right: 0.5rem;
+  color: #333;
+}
+.filter-section select {
+  padding: 0.5rem;
+  border: 1px solid #9dbfaf;
+  border-radius: 4px;
+  background: #fcf9d8;
+  color: #333;
+}
+
+/* Lista de Agendamentos */
+.agendamento-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.agendamento-list th,
+.agendamento-list td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #edebc9;
+}
+.agendamento-list th {
+  background-color: #009cb2;
+  color: white;
+  font-weight: 600;
+}
+.agendamento-list td {
+  background-color: #ffffff;
+}
+.agendamento-list .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.status-text {
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+.status-text.agendado { background-color: #FFD700; }
+.status-text.em_andamento { background-color: #FF6347; }
+.status-text.concluido { background-color: #6A5ACD; }
+.status-text.cancelado { background-color: #808080; }
+
+.empty-state {
+  text-align: center;
+  padding: 1rem;
+  color: #adb5bd;
+  font-size: 0.875rem;
+}
+
+/* Histórico */
+.history-section {
+  margin-top: 2rem;
+}
+.history-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #333;
+}
+.history-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.history-list th,
+.history-list td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #edebc9;
+}
+.history-list th {
+  background-color: #009cb2;
+  color: white;
+  font-weight: 600;
+}
+.history-list td {
+  background-color: #ffffff;
+}
+
+/* Modais */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease;
+}
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  animation: slideIn 0.3s ease-out;
+  color: #333;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #edebc9;
+  margin-bottom: 1rem;
+}
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+.close-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  color: #888;
+  cursor: pointer;
+  padding: 0;
+}
+.close-button:hover { color: #000; }
+
+.modal-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.modal-form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+.modal-form .form-group.full-width {
+  grid-column: 1 / -1;
+}
+.modal-form label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+.modal-form input,
+.modal-form select,
+.modal-form textarea {
+  width: 100%;
+  border: 1px solid #9dbfaf;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  background: #fcf9d8;
+  color: #333;
+  transition: border-color 0.2s;
+}
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+  border-color: #00ccbe;
+  outline: none;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Popup de Usuário */
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.2s ease;
+}
+.user-popup {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+  width: 90%;
+  max-width: 320px;
+  z-index: 1051;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+.popup-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+.popup-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.popup-option-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #fcf9d8;
+  border: 1px solid #9dbfaf;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.popup-option-button:hover {
+  background-color: #f0e8c0;
+  transform: translateY(-1px);
+}
+.popup-option-button.logout {
+  background-color: #ffdddd;
+  border-color: #ffb8b8;
+  color: #d8000c;
+}
+.popup-option-button.logout:hover {
+  background-color: #ffc2c2;
+}
+
+/* Animações */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 0;
+  }
+  .sidebar.open {
+    width: 180px;
+  }
+  .topbar {
+    left: 0;
+  }
+  .sidebar.open ~ .topbar {
+    left: 0;
+  }
+  .content {
+    margin-left: 0;
+  }
+  .sidebar.open ~ .content {
+    margin-left: 0;
+  }
+}
+
+/* COLE ESTAS NOVAS CLASSES NO FINAL DO SEU ARQUIVO CSS */
+
+.agendamento-columns {
+  display: grid;
+  /* Cria duas colunas que se ajustam em telas menores */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.agendamento-column .column-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: #ffffff; /* Fundo branco para o cabeçalho da coluna */
+  border-bottom: 2px solid #009cb2; /* Linha com sua cor principal */
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.agendamento-column .column-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.agendamento-column .column-header .task-count {
+  background-color: #009cb2;
+  color: white;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+}
+
+.column-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.agendamento-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-left: 5px solid #00ccbe; /* Cor do detalhe esquerdo, usando seu verde */
+}
+
+.agendamento-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.agendamento-item h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #333;
+}
+
+.agendamento-item p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.agendamento-item .data {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+/* Detalhes do Modal para melhor espaçamento */
+.modal-details p {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+.modal-details p strong {
+  color: #333;
+}

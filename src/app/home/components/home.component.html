@@ -1,34 +1,39 @@
-<!-- Barra Lateral (Sidebar) -->
 <div class="sidebar" [class.open]="sidebarOpen">
-  <!-- Botão para abrir/fechar -->
   <button class="icon-button" (click)="toggleSidebar()">☰</button>
 
-  <div class="menu-items" *ngIf="sidebarOpen">
-    <button class="menu-button">
-      <span class="icon chat-icon"></span>
-      <span class="menu-text">Manutenção</span>
-    </button>
-    <button class="menu-button">
-      <span class="icon doc-icon"></span>
-      <span class="menu-text">Emitir relatório</span>
-    </button>
-    <button class="menu-button">
-      <span class="icon check-icon"></span>
-      <span class="menu-text">Agendamento</span>
-    </button>
-    <button class="menu-button">
-      <span class="icon folder-icon"></span>
-      <span class="menu-text">Arquivos</span>
-    </button>
-  </div>
+  @if (sidebarOpen) {
+    <div class="menu-items">
+      <a class="menu-button" [routerLink]="'/agendamento'">
+        <span class="icon check-icon"></span>
+        <span class="menu-text">Agendamento</span>
+      </a>
+
+      @if (authService.isAdmin) {
+        <a class="menu-button" [routerLink]="'/gerenciar-usuarios'">
+          <span class="icon user-admin-icon"></span> <span class="menu-text">Usuários</span>
+        </a>
+      }
+
+      <button class="menu-button"> <span class="icon doc-icon"></span>
+        <span class="menu-text">Emitir relatório</span>
+      </button>
+      <button class="menu-button"> <span class="icon folder-icon"></span>
+        <span class="menu-text">Arquivos</span>
+      </button>
+
+      <button class="menu-button">
+        <span class="icon chat-icon"></span>
+        <span class="menu-text">Manutenção</span>
+      </button>
+
+    </div>
+  }
 </div>
 
-<!-- Barra Superior (Topbar) -->
 <div class="topbar">
   <div class="top-icons">
-    <button class="icon-button-top">
-      <span class="icon home-icon"></span>
-    </button>
+    <button class="icon-button-top" routerLink="/home">
+      <span class="icon home-icon"></span> </button>
     <button class="icon-button-top">
       <span class="icon bell-icon"></span>
     </button>
@@ -41,42 +46,67 @@
 <div class="content">
   <div class="maquinas-grid">
 
-    <div class="maquina-card" *ngFor="let maquina of maquinas">
-      <div class="card-header">
-        <h3>{{ maquina.nome }}</h3>
+    @for (maquina of maquinas; track maquina.id) {
+      <div class="maquina-card">
+        <div class="card-header">
+          <h3>{{ maquina.nome }}</h3>
+          <button class="delete-button" title="Excluir máquina" (click)="excluirMaquina(maquina.id!)">
+            🗑️
+          </button>
+        </div>
+        <div class="card-status">
+          <span class="status-dot" [ngClass]="'status-' + maquina.status"></span>
+          <p>{{ getStatusLabel(maquina.status) }}</p>
+        </div>
+        <div class="card-actions">
+          <a class="details-button" [routerLink]="['/maquina', maquina.id]">Detalhes</a>
+          <button class="manual-btn" (click)="abrirChat(maquina)">Consultar Manual</button>
+        </div>
       </div>
-      <div class="card-status">
-        <span class="status-dot" [ngClass]="'status-' + maquina.status"></span>
-        <p>{{ getStatusLabel(maquina.status) }}</p>
-      </div>
-      <div class="card-actions">
-        <a class="details-button" [routerLink]="['/maquina', maquina.id]">Detalhes</a>
-      </div>
-    </div>
+    }
 
     <a class="add-card" routerLink="/cadastrar-maquina">
       <span>+</span>
     </a>
+
+    @if (maquinas.length === 0) {
+      <p class="empty-state-card">Nenhuma máquina cadastrada ainda. Clique no '+' para adicionar a primeira!</p>
+    }
+
   </div>
 </div>
 
-<!-- Popup de usuário com chamadas de função  -->
-<div class="popup-backdrop" *ngIf="userPopupOpen" (click)="closeUserPopup()">
-  <div class="user-popup" (click)="$event.stopPropagation()">
-    <div class="popup-header">
-      <h3>Opções de Usuário</h3>
-      <button class="close-button" (click)="closeUserPopup()">&times;</button>
-    </div>
-    <div class="popup-content">
-      <button class="popup-option-button" (click)="editarPerfil()">
-        Editar Perfil
-      </button>
-      <button class="popup-option-button" (click)="abrirConfiguracoes()">
-        Configurações
-      </button>
-      <button class="popup-option-button logout" (click)="logout()">
-        Sair
-      </button>
+@if (userPopupOpen) {
+  <div class="popup-backdrop" (click)="closeUserPopup()">
+    <div class="user-popup" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <h3>Opções de Utilizador</h3>
+        <button class="close-button" (click)="closeUserPopup()">&times;</button>
+      </div>
+      <div class="popup-content">
+        <button class="popup-option-button" (click)="editarPerfil()">
+          Editar Perfil
+        </button>
+        <button class="popup-option-button" (click)="abrirConfiguracoes()">
+          Configurações
+        </button>
+        <button class="popup-option-button logout" (click)="logout()">
+          Sair
+        </button>
+      </div>
     </div>
   </div>
-</div>
+}
+
+@if (chatAberto) {
+  <div class="chat-modal-overlay" (click)="fecharChat()">
+    <div class="chat-modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="fecharChat()">X</button>
+      @if (maquinaSelecionadaParaChat) {
+        <app-chat [maquinaId]="maquinaSelecionadaParaChat.id!"
+                  [nomeMaquina]="maquinaSelecionadaParaChat.nome">
+        </app-chat>
+      }
+    </div>
+  </div>
+}
