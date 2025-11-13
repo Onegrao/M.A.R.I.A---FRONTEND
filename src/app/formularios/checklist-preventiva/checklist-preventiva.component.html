@@ -1,0 +1,92 @@
+<div class="content">
+  <div class="kanban-header">
+    <h2>Checklist de Manutenção Preventiva</h2>
+  </div>
+
+  <div class="modal-content modal-form" style="max-width: 900px; margin: auto;">
+    <form [formGroup]="preventiveForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-grid-layout">
+
+        <div>
+          <h3 class="form-section-title">Dados do Agendamento</h3>
+          <div class="form-group">
+            <label>Máquina</label>
+            <input type="text" formControlName="maquina">
+          </div>
+          <div class="form-group">
+            <label>Técnico Responsável</label>
+            <input type="text" formControlName="tecnico">
+          </div>
+
+          <h3 class="form-section-title">Dados da Execução</h3>
+          <div class="form-group">
+            <label for="data_manutencao">Data da manutenção:</label>
+            <input type="date" id="data_manutencao" formControlName="data_manutencao">
+          </div>
+          <div class="form-group">
+            <label for="setor">Setor:</label>
+            <input type="text" id="setor" formControlName="setor">
+          </div>
+          <div class="form-group">
+            <label for="numero_serie">Nº de série:</label>
+            <input type="text" id="numero_serie" formControlName="numero_serie">
+          </div>
+        </div>
+
+        <div>
+          <h3 class="form-section-title">Itens de Verificação (Obrigatórios)</h3>
+
+          <div class="toggle-group">
+            <input type="checkbox" id="item1" formControlName="item_verificacao_visual">
+            <label for="item1">Verificação Visual</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item2" formControlName="item_conferir_ruidos">
+            <label for="item2">Conferir Ruídos</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item3" formControlName="item_checar_limpeza">
+            <label for="item3">Checar Limpeza</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item4" formControlName="item_verificar_conexoes">
+            <label for="item4">Verificar conexões</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item5" formControlName="item_lubrificacao_juntas">
+            <label for="item5">Lubrificação de juntas</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item6" formControlName="item_verificar_desgastes">
+            <label for="item6">Verificar desgastes</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item7" formControlName="item_inspecao_cabos">
+            <label for="item7">Inspeção de cabos</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item8" formControlName="item_testar_sensores">
+            <label for="item8">Testar sensores</label>
+          </div>
+          <div class="toggle-group">
+            <input type="checkbox" id="item9" formControlName="item_teste_completo">
+            <label for="item9">Teste completo da máquina</label>
+          </div>
+
+          <h3 class="form-section-title" style="margin-top: 20px;">Observações Finais</h3>
+          <div class="form-group">
+            <label for="observacoes">Parecer Técnico (Opcional)</label>
+            <textarea id="observacoes" formControlName="observacoes" rows="4"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="onImprimir()">Imprimir</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!preventiveForm.valid">Concluir e Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>

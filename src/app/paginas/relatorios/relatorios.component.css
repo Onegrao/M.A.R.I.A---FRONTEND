@@ -1,0 +1,257 @@
+/* ARQUIVO: src/app/paginas/relatorios/relatorios.component.css */
+
+/* --- 1. ESTILOS DO LAYOUT (Copiado do seu home.component.css) --- */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: 60px; height: 100vh;
+  background-color: #009cb2;
+  transition: width 0.3s ease;
+  z-index: 1000; overflow-x: hidden;
+}
+.sidebar.open { width: 200px; }
+.icon-button { background: none; color: white; border: none; font-size: 24px; margin: 10px; cursor: pointer; }
+.menu-items { display: flex; flex-direction: column; margin-top: 20px; }
+.menu-button, a.menu-button {
+  display: flex; align-items: center; background: none; border: none;
+  color: white; padding: 12px 15px; width: 100%; text-align: left;
+  cursor: pointer; transition: background-color 0.2s; white-space: nowrap;
+  text-decoration: none; box-sizing: border-box;
+}
+.menu-button:hover, a.menu-button:hover { background-color: #008a9e; }
+.menu-button .icon {
+  width: 24px; height: 24px;
+  background-size: contain; background-repeat: no-repeat;
+  background-position: center; flex-shrink: 0; margin-right: 15px;
+  display: inline-block;
+}
+.menu-text { font-size: 1rem; font-weight: 500;}
+
+/* Ícones do Sidebar (Copiado) */
+.home-icon { background-image: url('assets/home.png'); }
+.chat-icon { background-image: url('assets/chat.png'); }
+.doc-icon { background-image: url('assets/doc.png'); }
+.check-icon { background-image: url('assets/check.png'); }
+.folder-icon { background-image: url('assets/folder.png'); }
+.user-admin-icon { background-image: url('assets/admin-user.png'); }
+
+.topbar {
+  position: fixed; top: 0; left: 60px; right: 0; height: 60px;
+  background-color: var(--cor-fundo-secundario, #ffffff);
+  border-bottom: 1px solid var(--cor-borda, #e9ecef);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 0 20px; z-index: 900; transition: left 0.3s ease;
+}
+.sidebar.open ~ .topbar { left: 200px; }
+.top-icons { display: flex; align-items: center; gap: 15px;}
+.icon-button-top { background: none; border: none; cursor: pointer; padding: 5px; border-radius: 50%; transition: background-color 0.2s; display: flex; align-items: center; justify-content: center;}
+.icon-button-top:hover { background-color: rgba(0,0,0,0.05); }
+.top-icons .icon {
+  width: 26px; height: 26px;
+  background-size: contain; background-repeat: no-repeat;
+  background-position: center; display: block;
+  opacity: 0.7; transition: opacity 0.2s;
+}
+.icon-button-top:hover .icon { opacity: 1; }
+.bell-icon { background-image: url('assets/bell.png'); }
+.user-icon { background-image: url('assets/user.png'); }
+
+.content {
+  margin-top: 60px;
+  margin-left: 60px;
+  padding: 25px;
+  transition: margin-left 0.3s ease;
+  background-color: var(--cor-fundo-primario, #f8f9fa);
+  min-height: calc(100vh - 60px);
+}
+.sidebar.open ~ .content { margin-left: 200px; }
+
+/* Pop-up do Usuário (Copiado) */
+.popup-backdrop {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050; display: flex;
+  justify-content: flex-end; align-items: flex-start;
+  padding-top: 55px; padding-right: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.user-popup {
+  background: var(--cor-fundo-secundario, #ffffff);
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  width: 280px; z-index: 1051;
+  overflow: hidden;
+  animation: slideInDropdown 0.3s ease-out;
+  border: 1px solid var(--cor-borda, #dee2e6);
+}
+@keyframes slideInDropdown {
+  from { transform: translateY(-15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.popup-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--cor-borda, #eee);
+}
+.popup-header h3 { margin: 0; font-size: 1rem; font-weight: 600; color: var(--cor-texto-primario, #343a40); }
+.popup-header .close-button {
+  background: none; border: none; font-size: 1.5rem; line-height: 1;
+  color: var(--cor-texto-secundario, #adb5bd); cursor: pointer; padding: 0;
+  transition: color 0.2s;
+}
+.popup-header .close-button:hover { color: var(--cor-texto-primario, #495057); }
+
+.popup-content { padding: 10px; display: flex; flex-direction: column; gap: 5px; }
+.popup-option-button {
+  width: 100%; padding: 10px 15px; font-size: 0.9rem; font-weight: 500;
+  background-color: transparent;
+  border: none; border-radius: 6px; cursor: pointer; text-align: left;
+  color: var(--cor-texto-primario, #495057);
+  transition: background-color 0.2s, color 0.2s;
+}
+.popup-option-button:hover {
+  background-color: var(--cor-fundo-hover, #f8f9fa);
+  color: #007bff;
+}
+.popup-option-button.logout { color: #dc3545; }
+.popup-option-button.logout:hover {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- 2. ESTILOS DA PÁGINA DE RELATÓRIOS (que já fizemos) --- */
+
+/* Cabeçalho (Título e Botão PDF) */
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #adb5bd;
+  margin-bottom: 1.5rem;
+}
+.kanban-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  color: #343a40;
+}
+
+/* Botões */
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background-color: #00ccbe; color: white; }
+.btn-primary:hover { background-color: #09a6a3; }
+.btn-secondary { background-color: #fcf9d8; color: #333; border: 1px solid #adb5bd; }
+.btn-secondary:hover { background-color: #f0e8c0; }
+
+/* Caixa de Filtros */
+.modal-content {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  color: #333;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+.modal-form { padding: 1.8rem 2rem; }
+.form-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem 1.8rem;
+}
+.form-group { display: flex; flex-direction: column; }
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.4rem;
+}
+.form-group input[type="date"],
+.form-group select {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  color: #495057;
+  background-color: #fff;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  box-sizing: border-box;
+}
+.form-group input[type="date"]:focus,
+.form-group select:focus {
+  border-color: #009cb2;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 156, 178, 0.2);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Tabela de Histórico */
+.agendamento-list {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+.agendamento-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.agendamento-list th,
+.agendamento-list td {
+  padding: 1rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+}
+.agendamento-list th {
+  background-color: #009cb2; /* Seu azul */
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+.agendamento-list td {
+  color: #495057;
+  font-size: 0.95rem;
+}
+.agendamento-list tbody tr:last-child td {
+  border-bottom: none;
+}
+.empty-state {
+  text-align: center;
+  padding: 2.5rem;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+/* Tags de Status */
+.status-text {
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+.status-text.agendado { background-color: #FFD700; }
+.status-text.em_andamento { background-color: #FF6347; }
+.status-text.concluido { background-color: #6A5ACD; }
+.status-text.cancelado { background-color: #808080; }

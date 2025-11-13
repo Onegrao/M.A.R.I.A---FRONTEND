@@ -11,6 +11,7 @@ export interface Usuario {
   first_name?: string;
   last_name?: string;
   is_staff?: boolean;
+  funcao?: string; // <--- ADICIONADO
   cargo?: string;
   empresa?: string;
   telefone?: string;
@@ -28,6 +29,7 @@ export interface PerfilUsuario {
   id: number;
   nome: string; // Vem de first_name no backend
   email: string;
+  funcao?: string; // <--- ADICIONADO
   cargo?: string; // Readonly
   empresa?: string;
   telefone?: string;
@@ -51,7 +53,6 @@ export class UsuarioService {
 
   // --- Rotas de Admin ---
   getUsuarios(): Observable<Usuario[]> {
-    // A URL base agora é minúscula, conforme corrigimos no urls.py
     return this.http.get<Usuario[]>(`${this.apiUrl}/usuarios/`);
   }
 
@@ -69,12 +70,10 @@ export class UsuarioService {
 
   // --- Rotas de Perfil (usuário normal) ---
   getPerfil(): Observable<PerfilUsuario> {
-    // A action 'perfil' foi movida para dentro do UsuarioViewSet
     return this.http.get<PerfilUsuario>(`${this.apiUrl}/usuarios/perfil/`);
   }
 
   updatePerfil(perfilData: PerfilUsuario): Observable<PerfilUsuario> {
-    // Usar PATCH é melhor para atualizações parciais
     return this.http.patch<PerfilUsuario>(`${this.apiUrl}/usuarios/perfil/`, perfilData);
   }
 }

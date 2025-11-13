@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-// 1. Importar o HttpErrorResponse
+import { Router, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Agendamento, AgendamentoService, NovoAgendamento } from '../../services/agendamento.service';
 import { Maquina, MaquinaService } from '../../services/maquina.service';
 import { Usuario, UsuarioService } from '../../services/usuario.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-agendamento',
@@ -20,58 +20,64 @@ export class AgendamentoComponent implements OnInit {
   novoAgendamentoModalOpen = false;
   detalhesModalOpen = false;
   historicoModalOpen = false;
-
   agendamentosPendentes: Agendamento[] = [];
   historicoMaquinaSelecionada: Agendamento[] = [];
   maquinasDisponiveis: Maquina[] = [];
   responsaveisDisponiveis: Usuario[] = [];
-
   novoAgendamento: Partial<NovoAgendamento> = { tipo_manutencao: 'Preventiva' };
   agendamentoSelecionado: Agendamento | null = null;
   observacoesParaConclusao: string = '';
-
   nomeMaquinaHistorico: string = '';
   isLoadingHistorico: boolean = false;
-
   statusFilter: string = '';
 
   constructor(
     private agendamentoService: AgendamentoService,
     private maquinaService: MaquinaService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    public authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.carregarDadosIniciais();
+    const perfil = this.authService.getPerfilUsuario();
+    if (perfil) {
+      this.carregarDadosIniciais();
+    } else {
+      this.authService.currentUser$.subscribe(user => {
+        if (user) {
+          this.carregarDadosIniciais();
+        }
+      });
+    }
   }
 
   carregarDadosIniciais(): void {
     this.carregarAgendamentos();
-    this.carregarMaquinas();
-    this.carregarUsuarios();
+    if (this.authService.isGerente() || this.authService.isAdmin) {
+      this.carregarMaquinas();
+      this.carregarUsuarios();
+    }
   }
 
   carregarAgendamentos(): void {
     this.agendamentoService.getAgendamentos('pendentes').subscribe({
-      // 2. Adicionar tipo
-      next: (data: Agendamento[]) => {
-        this.agendamentosPendentes = data;
-      },
-      // 3. Adicionar tipo
+      next: (data: Agendamento[]) => { this.agendamentosPendentes = data; },
       error: (err: HttpErrorResponse) => {
-        console.error("ERRO DETALHADO [Pendentes]:", err);
-        alert('Erro ao carregar agendamentos pendentes.');
+        if (err.status !== 403) {
+          console.error("ERRO DETALHADO [Pendentes]:", err);
+          alert('Erro ao carregar agendamentos pendentes.');
+        } else {
+          console.log("Usuário não tem permissão para listar todos os agendamentos (ou não tem nenhum).");
+          this.agendamentosPendentes = [];
+        }
       }
     });
   }
 
   carregarMaquinas(): void {
     this.maquinaService.getMaquinas().subscribe({
-      // 4. Adicionar tipo
-      next: (data: Maquina[]) => {
-        this.maquinasDisponiveis = data;
-      },
-      // 5. Adicionar tipo
+      next: (data: Maquina[]) => { this.maquinasDisponiveis = data; },
       error: (err: HttpErrorResponse) => {
         console.error("ERRO DETALHADO [Máquinas]:", err);
         alert('Erro ao carregar máquinas.');
@@ -81,14 +87,11 @@ export class AgendamentoComponent implements OnInit {
 
   carregarUsuarios(): void {
     this.usuarioService.getUsuarios().subscribe({
-      // 6. Adicionar tipo
       next: (data: Usuario[]) => {
-        this.responsaveisDisponiveis = data;
+        this.responsaveisDisponiveis = data.filter(u => u.funcao === 'TECNICO' || u.funcao === 'GERENTE' || u.is_staff);
       },
-      // 7. Adicionar tipo
       error: (err: HttpErrorResponse) => {
-        console.error("ERRO DETALHADO [Usuários]:", err);
-        alert('Erro ao carregar usuários.');
+        console.error("ERRO ao carregar usuários:", err.message);
       }
     });
   }
@@ -105,14 +108,12 @@ export class AgendamentoComponent implements OnInit {
       alert('Preencha os campos obrigatórios: Máquina, Responsável e Data.');
       return;
     }
-
     this.agendamentoService.criarAgendamento(this.novoAgendamento as NovoAgendamento).subscribe({
       next: () => {
         this.carregarAgendamentos();
         alert('Agendamento criado com sucesso!');
         this.fecharModalNovoAgendamento();
       },
-      // 8. Adicionar tipo
       error: (err: HttpErrorResponse) => {
         console.error("ERRO DETALHADO [Salvar Agendamento]:", err);
         alert('Erro ao criar agendamento.');
@@ -121,19 +122,27 @@ export class AgendamentoComponent implements OnInit {
   }
 
   iniciarManutencao(): void {
-    if (!this.agendamentoSelecionado) return;
+    const agendamentoParaIniciar = this.agendamentoSelecionado;
+    if (!agendamentoParaIniciar) return;
 
-    this.agendamentoService.iniciar(this.agendamentoSelecionado.id).subscribe({
+    this.agendamentoService.iniciar(agendamentoParaIniciar.id).subscribe({
       next: () => {
-        const index = this.agendamentosPendentes.findIndex(a => a.id === this.agendamentoSelecionado!.id);
-        if (index !== -1) {
-          this.agendamentosPendentes[index].status = 'em_andamento';
-          this.agendamentosPendentes[index].status_display = 'Em Andamento';
+        if (agendamentoParaIniciar.tipo_manutencao === 'Preventiva') {
+          this.fecharModalDetalhes();
+          this.router.navigate(['/checklist-preventiva', agendamentoParaIniciar.id]);
+        } else {
+          const index = this.agendamentosPendentes.findIndex(a => a.id === agendamentoParaIniciar.id);
+          if (index !== -1) {
+            this.agendamentosPendentes[index].status = 'em_andamento';
+            this.agendamentosPendentes[index].status_display = 'Em Andamento';
+          }
+          alert('Manutenção (Corretiva/Preditiva) iniciada!');
+          if (this.agendamentoSelecionado && this.agendamentoSelecionado.id === agendamentoParaIniciar.id) {
+            this.agendamentoSelecionado.status = 'em_andamento';
+            this.agendamentoSelecionado.status_display = 'Em Andamento';
+          }
         }
-        alert('Manutenção iniciada!');
-        this.fecharModalDetalhes();
       },
-      // 9. Adicionar tipo
       error: (err: HttpErrorResponse) => {
         console.error("ERRO DETALHADO [Iniciar Manutenção]:", err);
         alert('Erro ao iniciar manutenção.');
@@ -141,16 +150,18 @@ export class AgendamentoComponent implements OnInit {
     });
   }
 
+  // A chamada para 'concluir' agora envia 'null' como o terceiro argumento
   concluirManutencao(): void {
-    if (!this.agendamentoSelecionado) return;
+    const idParaConcluir = this.agendamentoSelecionado?.id;
+    if (!idParaConcluir) return;
 
-    this.agendamentoService.concluir(this.agendamentoSelecionado.id, this.observacoesParaConclusao).subscribe({
+    // Envia 'null' para 'dadosChecklist', pois não é um checklist
+    this.agendamentoService.concluir(idParaConcluir, this.observacoesParaConclusao, null).subscribe({
       next: () => {
-        this.agendamentosPendentes = this.agendamentosPendentes.filter(a => a.id !== this.agendamentoSelecionado!.id);
+        this.agendamentosPendentes = this.agendamentosPendentes.filter(a => a.id !== idParaConcluir);
         alert('Manutenção concluída com sucesso!');
         this.fecharModalDetalhes();
       },
-      // 10. Adicionar tipo
       error: (err: HttpErrorResponse) => {
         console.error("ERRO DETALHADO [Concluir Manutenção]:", err);
         alert('Erro ao concluir manutenção.');
@@ -159,19 +170,17 @@ export class AgendamentoComponent implements OnInit {
   }
 
   cancelarManutencao(): void {
-    if (!this.agendamentoSelecionado) return;
-
+    const idParaCancelar = this.agendamentoSelecionado?.id;
+    if (!idParaCancelar) return;
     if (!confirm('Tem certeza que deseja cancelar este agendamento?')) {
       return;
     }
-
-    this.agendamentoService.cancelar(this.agendamentoSelecionado.id).subscribe({
+    this.agendamentoService.cancelar(idParaCancelar).subscribe({
       next: () => {
-        this.agendamentosPendentes = this.agendamentosPendentes.filter(a => a.id !== this.agendamentoSelecionado!.id);
+        this.agendamentosPendentes = this.agendamentosPendentes.filter(a => a.id !== idParaCancelar);
         alert('Agendamento cancelado.');
         this.fecharModalDetalhes();
       },
-      // 11. Adicionar tipo
       error: (err: HttpErrorResponse) => {
         console.error("ERRO DETALHADO [Cancelar Manutenção]:", err);
         alert('Erro ao cancelar agendamento.');
@@ -183,38 +192,30 @@ export class AgendamentoComponent implements OnInit {
     this.novoAgendamento = { tipo_manutencao: 'Preventiva' };
     this.novoAgendamentoModalOpen = true;
   }
-
   fecharModalNovoAgendamento(): void {
     this.novoAgendamentoModalOpen = false;
   }
-
   abrirModalDetalhes(agendamento: Agendamento): void {
     this.agendamentoSelecionado = { ...agendamento };
     this.observacoesParaConclusao = agendamento.observacoes_execucao || '';
     this.detalhesModalOpen = true;
   }
-
   fecharModalDetalhes(): void {
     this.detalhesModalOpen = false;
     this.agendamentoSelecionado = null;
     this.observacoesParaConclusao = '';
   }
-
   abrirModalHistorico(agendamento: Agendamento): void {
     this.isLoadingHistorico = true;
     this.historicoMaquinaSelecionada = [];
     this.nomeMaquinaHistorico = agendamento.maquina_nome || 'Máquina';
     this.historicoModalOpen = true;
-
     const maquinaId = agendamento.maquina;
-
     this.agendamentoService.getAgendamentos('historico', maquinaId).subscribe({
-      // 12. Adicionar tipo
       next: (data: Agendamento[]) => {
         this.historicoMaquinaSelecionada = data;
         this.isLoadingHistorico = false;
       },
-      // 13. Adicionar tipo
       error: (err: HttpErrorResponse) => {
         console.error("ERRO DETALHADO [Histórico Máquina]:", err);
         alert('Erro ao carregar histórico da máquina.');
@@ -222,13 +223,11 @@ export class AgendamentoComponent implements OnInit {
       }
     });
   }
-
   fecharModalHistorico(): void {
     this.historicoModalOpen = false;
     this.historicoMaquinaSelecionada = [];
     this.nomeMaquinaHistorico = '';
   }
-
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
   }

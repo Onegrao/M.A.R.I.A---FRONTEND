@@ -60,10 +60,12 @@
   font-size: 16px;
 }
 
+.home-icon {background-image: url('assets/home.png');}
 .chat-icon { background-image: url('assets/chat.png'); }
 .doc-icon { background-image: url('assets/doc.png'); }
 .check-icon { background-image: url('assets/check.png'); }
 .folder-icon { background-image: url('assets/folder.png'); }
+.user-admin-icon { background-image: url('assets/admin-user.png'); }
 
 /* Topbar */
 .topbar {
@@ -114,7 +116,8 @@
 }
 
 .bell-icon { background-image: url('assets/bell.png'); }
-.user-icon { background-image: url('../../../assets/admin-user.png'); }
+.user-icon { background-image: url('assets/user.png'); }
+
 
 /* Content */
 .content {

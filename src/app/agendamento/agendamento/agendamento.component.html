@@ -32,7 +32,12 @@
 <div class="content">
   <div class="kanban-header">
     <h2>Agendamentos de Manutenção</h2>
-    <button class="btn btn-primary" (click)="abrirModalNovoAgendamento()">Novo Agendamento</button>
+
+    <button class="btn btn-primary"
+            *ngIf="authService.isGerente()"
+            (click)="abrirModalNovoAgendamento()">
+      Novo Agendamento
+    </button>
   </div>
 
   <div class="filter-section">
@@ -50,7 +55,7 @@
       <tr>
         <th>ID</th>
         <th>Máquina</th>
-        <th>Responsável</th>
+        <th *ngIf="authService.isGerente()">Responsável</th>
         <th>Data</th>
         <th>Status</th>
         <th>Ações</th>
@@ -61,17 +66,23 @@
           <tr>
             <td>{{ agendamento.id }}</td>
             <td>{{ agendamento.maquina_nome }}</td>
-            <td>{{ agendamento.responsavel_nome }}</td>
+            <td *ngIf="authService.isGerente()">{{ agendamento.responsavel_nome }}</td>
             <td>{{ agendamento.data_hora_agendada | date:'dd/MM/yyyy HH:mm' }}</td>
             <td><span class="status-text" [ngClass]="agendamento.status">{{ agendamento.status_display }}</span></td>
             <td>
               <button class="btn btn-sm btn-info" (click)="abrirModalDetalhes(agendamento)">Detalhes</button>
-              <button class="btn btn-sm btn-secondary" (click)="abrirModalHistorico(agendamento)">Histórico</button>
+              <button class="btn btn-sm btn-secondary"
+                      *ngIf="authService.isGerente() || authService.isTecnico()"
+                      (click)="abrirModalHistorico(agendamento)">
+                Histórico
+              </button>
             </td>
           </tr>
         } @empty {
           <tr>
-            <td colspan="6" class="empty-state">Nenhum agendamento pendente encontrado.</td>
+            <td [attr.colspan]="authService.isGerente() ? 6 : 5" class="empty-state">
+              Nenhum agendamento pendente encontrado.
+            </td>
           </tr>
         }
       </tbody>
@@ -148,7 +159,7 @@
           <p><strong>Tipo de Manutenção:</strong> {{ agendamentoSelecionado.tipo_manutencao }}</p>
           <p><strong>Descrição:</strong> {{ agendamentoSelecionado.descricao_agendamento }}</p>
 
-          @if (agendamentoSelecionado.status === 'em_andamento') {
+          @if (agendamentoSelecionado.status === 'em_andamento' && agendamentoSelecionado.tipo_manutencao !== 'Preventiva') {
             <div class="form-group full-width" style="margin-top: 1rem;">
               <label>Observações da Execução (Parecer Técnico)</label>
               <textarea [(ngModel)]="observacoesParaConclusao" name="observacoes_execucao" rows="4"></textarea>
@@ -158,19 +169,19 @@
           <div class="modal-actions">
             <button class="btn btn-secondary" (click)="fecharModalDetalhes()">Fechar</button>
 
-            @if (agendamentoSelecionado.status === 'agendado') {
+            @if (agendamentoSelecionado.status === 'agendado' && (authService.isGerente() || authService.isTecnico())) {
               <button class="btn btn-info" (click)="iniciarManutencao()">
                 Iniciar
               </button>
             }
 
-            @if (agendamentoSelecionado.status === 'em_andamento') {
+            @if (agendamentoSelecionado.status === 'em_andamento' && (authService.isGerente() || authService.isTecnico()) && agendamentoSelecionado.tipo_manutencao !== 'Preventiva') {
               <button class="btn btn-success" (click)="concluirManutencao()">
                 Concluir
               </button>
             }
 
-            @if (agendamentoSelecionado.status === 'agendado' || agendamentoSelecionado.status === 'em_andamento') {
+            @if ((agendamentoSelecionado.status === 'agendado' || agendamentoSelecionado.status === 'em_andamento') && authService.isGerente()) {
               <button class="btn btn-danger" (click)="cancelarManutencao()">
                 Cancelar
               </button>

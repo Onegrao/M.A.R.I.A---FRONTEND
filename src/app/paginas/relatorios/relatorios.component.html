@@ -1,0 +1,219 @@
+<div class="sidebar" [class.open]="sidebarOpen">
+  <button class="icon-button" (click)="toggleSidebar()">☰</button>
+
+  @if (sidebarOpen) {
+    <div class="menu-items">
+      <a class="menu-button" [routerLink]="'/home'">
+        <span class="icon home-icon"></span>
+        <span class="menu-text">Home</span>
+      </a>
+      <a class="menu-button" [routerLink]="'/agendamento'">
+        <span class="icon check-icon"></span>
+        <span class="menu-text">Agendamento</span>
+      </a>
+      <a class="menu-button" [routerLink]="'/relatorios'">
+        <span class="icon doc-icon"></span>
+        <span class="menu-text">Relatórios</span>
+      </a>
+      @if (authService.isGerente() || authService.isAdmin) { <a class="menu-button" [routerLink]="'/gerenciar-usuarios'">
+        <span class="icon user-admin-icon"></span> <span class="menu-text">Usuários</span>
+      </a>
+      }
+    </div>
+  }
+</div>
+
+<div class="topbar">
+  <div class="top-icons">
+    <button class="icon-button-top" routerLink="/home">
+      <span class="icon home-icon"></span> </button>
+    <button class="icon-button-top">
+      <span class="icon bell-icon"></span>
+    </button>
+    <button class="icon-button-top" (click)="openUserPopup()">
+      <span class="icon user-icon"></span>
+    </button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="kanban-header">
+    <h2>Relatórios (Histórico de Manutenções)</h2>
+
+    <button class="btn btn-primary" (click)="exportarPDFLista()">Exportar Lista para PDF</button>
+  </div>
+
+  <div class="modal-content modal-form" style="max-width: none; margin-bottom: 2rem;">
+    <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+
+      <div class="form-group">
+        <label for="filtroDataInicio">De:</label>
+        <input type="date" id="filtroDataInicio" [(ngModel)]="filtros.dataInicio" name="filtroDataInicio">
+      </div>
+
+      <div class="form-group">
+        <label for="filtroDataFim">Até:</label>
+        <input type="date" id="filtroDataFim" [(ngModel)]="filtros.dataFim" name="filtroDataFim">
+      </div>
+
+      <div class="form-group">
+        <label for="filtroMaquina">Máquina:</label>
+        <select id="filtroMaquina" [(ngModel)]="filtros.maquinaId" name="filtroMaquina">
+          <option value="">Todas</option>
+          @for (m of maquinasDisponiveis; track m.id) {
+            <option [value]="m.id">{{ m.nome }}</option>
+          }
+        </select>
+      </div>
+
+      @if (authService.isGerente() || authService.isAdmin) {
+        <div class="form-group">
+          <label for="filtroResponsavel">Responsável:</label>
+          <select id="filtroResponsavel" [(ngModel)]="filtros.responsavelId" name="filtroResponsavel">
+            <option value="">Todos</option>
+            @for (u of responsaveisDisponiveis; track u.id) {
+              <option [value]="u.id">{{ u.username }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="filtroTipo">Tipo:</label>
+        <select id="filtroTipo" [(ngModel)]="filtros.tipo" name="filtroTipo">
+          <option value="">Todos</option>
+          <option value="Preventiva">Preventiva</option>
+          <option value="Corretiva">Corretiva</option>
+          <option value="Preditiva">Preditiva</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions" style="padding-top: 1rem; border-top: none;">
+      <button class="btn btn-secondary" (click)="limparFiltros()">Limpar Filtros</button>
+      <button class="btn btn-primary" (click)="aplicarFiltros()">Aplicar Filtros</button>
+    </div>
+  </div>
+
+  <div class="agendamento-list">
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Máquina</th>
+        @if (authService.isGerente() || authService.isAdmin) {
+          <th>Responsável</th>
+        }
+        <th>Tipo</th>
+        <th>Data Conclusão</th>
+        <th>Status</th>
+        <th>Observações</th>
+        <th>Ações</th> </tr>
+      </thead>
+      <tbody>
+        @if (isLoading) {
+          <tr>
+            <td [attr.colspan]="authService.isGerente() || authService.isAdmin ? 8 : 7" class="empty-state">
+              Carregando histórico...
+            </td>
+          </tr>
+        }
+
+        @if (!isLoading) {
+          @for (item of historicoFiltrado; track item.id) {
+            <tr>
+              <td>{{ item.id }}</td>
+              <td>{{ item.maquina_nome }}</td>
+              @if (authService.isGerente() || authService.isAdmin) {
+                <td>{{ item.responsavel_nome }}</td>
+              }
+              <td>{{ item.tipo_manutencao_display }}</td>
+              <td>{{ item.data_hora_execucao | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <span class="status-text" [ngClass]="item.status">{{ item.status_display }}</span>
+              </td>
+              <td class="observacoes-coluna-limitada">{{ item.observacoes_execucao || 'N/A' }}</td>
+              <td>
+                <button class="btn btn-sm btn-info" (click)="abrirDetalhes(item)">Ver Detalhes</button>
+              </td>
+            </tr>
+          } @empty {
+            @if (!isLoading) {
+              <tr>
+                <td [attr.colspan]="authService.isGerente() || authService.isAdmin ? 8 : 7" class="empty-state">
+                  Nenhum registro encontrado para os filtros aplicados.
+                </td>
+              </tr>
+            }
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (userPopupOpen) {
+  <div class="popup-backdrop" (click)="closeUserPopup()">
+    <div class="user-popup" (click)="$event.stopPropagation()">
+      <div class="popup-header">
+        <h3>Opções de Utilizador</h3>
+        <button class="close-button" (click)="closeUserPopup()">&times;</button>
+      </div>
+      <div class="popup-content">
+        <button class="popup-option-button" (click)="editarPerfil()">
+          Editar Perfil
+        </button>
+        <button class="popup-option-button" (click)="abrirConfiguracoes()">
+          Configurações
+        </button>
+        <button class="popup-option-button logout" (click)="logout()">
+          Sair
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (detalhesModalOpen) {
+  <div class="modal-overlay" (click)="fecharDetalhes()">
+    <div class="modal-content modal-details" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Detalhes do Registro ID: {{ agendamentoSelecionado?.id }}</h3>
+        <button class="close-button" (click)="fecharDetalhes()">×</button>
+      </div>
+
+      @if (agendamentoSelecionado) {
+        <div class="detalhes-body">
+          <p><strong>Máquina:</strong> {{ agendamentoSelecionado.maquina_nome }}</p>
+          <p><strong>Tipo:</strong> {{ agendamentoSelecionado.tipo_manutencao_display }}</p>
+          <p><strong>Status:</strong> {{ agendamentoSelecionado.status_display }}</p>
+          <p><strong>Responsável:</strong> {{ agendamentoSelecionado.responsavel_nome }}</p>
+          <p><strong>Data Agendada:</strong> {{ agendamentoSelecionado.data_hora_agendada | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Data Conclusão:</strong> {{ agendamentoSelecionado.data_hora_execucao | date:'dd/MM/yyyy HH:mm' }}</p>
+
+          <hr>
+          <p><strong>Observações (Parecer Técnico):</strong></p>
+          <pre class="observacoes-box">{{ agendamentoSelecionado.observacoes_execucao || 'Nenhuma observação.' }}</pre>
+
+          @if(agendamentoSelecionado.checklist_dados; as dados) {
+            <hr>
+            <p><strong>Dados do Checklist:</strong></p>
+            <ul class="checklist-dados-lista">
+              <li>Setor: {{ dados.setor }}</li>
+              <li>Nº Série: {{ dados.numero_serie }}</li>
+              <li>Limpeza: {{ dados.item_checar_limpeza ? 'Conforme' : 'N/A' }}</li>
+              <li>Ruídos: {{ dados.item_conferir_ruidos ? 'Conforme' : 'N/A' }}</li>
+              <li>Conexões: {{ dados.item_verificar_conexoes ? 'Conforme' : 'N/A' }}</li>
+            </ul>
+          }
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="fecharDetalhes()">Fechar</button>
+          <button type="button" class="btn btn-primary" (click)="exportarPDFIndividual()">
+            Exportar PDF Individual
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+}

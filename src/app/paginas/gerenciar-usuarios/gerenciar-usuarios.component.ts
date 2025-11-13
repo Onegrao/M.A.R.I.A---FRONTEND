@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-gerenciar-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule], // FormsModule adicionado de volta
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './gerenciar-usuarios.component.html',
   styleUrls: ['./gerenciar-usuarios.component.css']
 })
@@ -52,7 +52,8 @@ export class GerenciarUsuariosComponent implements OnInit {
   // --- Métodos do Modal ---
   abrirModalNovo(): void {
     this.isEditMode = false;
-    this.usuarioSelecionado = { is_staff: false }; // Novo usuário não é admin por padrão
+    // Define os padrões para um novo usuário
+    this.usuarioSelecionado = { is_staff: false, funcao: 'OPERADOR' };
     this.modalOpen = true;
   }
 
@@ -60,7 +61,6 @@ export class GerenciarUsuariosComponent implements OnInit {
     this.isEditMode = true;
     // Cria uma cópia para não alterar a lista diretamente
     this.usuarioSelecionado = { ...usuario };
-    // Limpa o campo senha (nunca exibimos hash)
     this.usuarioSelecionado.password = '';
     this.modalOpen = true;
   }
@@ -73,6 +73,12 @@ export class GerenciarUsuariosComponent implements OnInit {
   salvarUsuario(): void {
     // Garante que is_staff seja booleano
     this.usuarioSelecionado.is_staff = !!this.usuarioSelecionado.is_staff;
+
+    // Garante que uma função foi selecionada
+    if (!this.usuarioSelecionado.funcao) {
+      alert('Por favor, selecione uma Função no Sistema M.A.R.I.A.');
+      return;
+    }
 
     // Remove senha se vazia (só atualiza se algo for digitado)
     if (!this.usuarioSelecionado.password) {

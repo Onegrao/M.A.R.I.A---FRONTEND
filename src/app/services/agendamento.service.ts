@@ -17,6 +17,7 @@ export interface Agendamento {
   status_display?: string;
   tipo_manutencao_display?: string;
   descricao_agendamento?: string;
+  checklist_dados?: any; //
 }
 
 export interface NovoAgendamento {
@@ -36,21 +37,26 @@ export class AgendamentoService {
   constructor(private http: HttpClient) {}
 
   getAgendamentos(tipo: 'pendentes' | 'historico', maquinaId?: number): Observable<Agendamento[]> {
-
     let params = new HttpParams().set('lista', tipo);
     if (maquinaId) {
       params = params.append('maquina_id', maquinaId.toString());
     }
-
     return this.http.get<Agendamento[]>(this.apiUrl, { params: params });
+  }
+
+  getAgendamentoById(id: number): Observable<Agendamento> {
+    return this.http.get<Agendamento>(`${this.apiUrl}${id}/`);
   }
 
   criarAgendamento(agendamento: NovoAgendamento): Observable<Agendamento> {
     return this.http.post<Agendamento>(this.apiUrl, agendamento);
   }
 
-  concluir(id: number, observacoes: string): Observable<Agendamento> {
-    const payload = { observacoes_execucao: observacoes };
+  concluir(id: number, observacoes: string, dadosChecklist: any): Observable<Agendamento> {
+    const payload = {
+      observacoes_execucao: observacoes,
+      checklist_dados: dadosChecklist
+    };
     return this.http.post<Agendamento>(`${this.apiUrl}${id}/concluir/`, payload);
   }
 

@@ -3,10 +3,19 @@
 
   @if (sidebarOpen) {
     <div class="menu-items">
+
+
       <a class="menu-button" [routerLink]="'/agendamento'">
         <span class="icon check-icon"></span>
         <span class="menu-text">Agendamento</span>
       </a>
+
+      @if (authService.isGerente() || authService.isAdmin || authService.isTecnico()) {
+        <a class="menu-button" [routerLink]="'/relatorios'">
+          <span class="icon doc-icon"></span>
+          <span class="menu-text">Relatórios</span>
+        </a>
+      }
 
       @if (authService.isAdmin) {
         <a class="menu-button" [routerLink]="'/gerenciar-usuarios'">
@@ -14,17 +23,12 @@
         </a>
       }
 
-      <button class="menu-button"> <span class="icon doc-icon"></span>
-        <span class="menu-text">Emitir relatório</span>
-      </button>
-      <button class="menu-button"> <span class="icon folder-icon"></span>
-        <span class="menu-text">Arquivos</span>
-      </button>
-
-      <button class="menu-button">
-        <span class="icon chat-icon"></span>
-        <span class="menu-text">Manutenção</span>
-      </button>
+      @if (authService.isGerente() || authService.isAdmin) {
+        <a class="menu-button" [routerLink]="'/cadastrar-maquina'">
+          <span class="icon folder-icon"></span>
+          <span class="menu-text">Cadastrar Máquina</span>
+        </a>
+      }
 
     </div>
   }
@@ -65,9 +69,11 @@
       </div>
     }
 
-    <a class="add-card" routerLink="/cadastrar-maquina">
-      <span>+</span>
-    </a>
+    @if (authService.isGerente() || authService.isAdmin) {
+      <a class="add-card" routerLink="/cadastrar-maquina">
+        <span>+</span>
+      </a>
+    }
 
     @if (maquinas.length === 0) {
       <p class="empty-state-card">Nenhuma máquina cadastrada ainda. Clique no '+' para adicionar a primeira!</p>
